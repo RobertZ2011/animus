@@ -56,11 +56,28 @@ namespace Animus {
                     WorkItem item = this->queues[i].pop_front();
 
                     item.work();
-                    if(item.loop) {
-                        this->queues[i].push(item);
-                    }
                 }
+                //for each queue, execute no more than the current number of items in the queue
+                //then move to the next queue
+                /*int maxItems = this->queues[i].size();
+                for(int j = 0; j < maxItems; j++) {
+                    Optional<WorkItem> optional = this->queues[i].pop_front_optional();
+
+                    if(optional.isSome()) {
+                        WorkItem work(optional.get());
+                        work.work();
+
+                        if(work.loop) {
+                            this->queues[i].push(work);
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }*/
             }
+
+            //TODO: yield here
         }
     }
 
@@ -79,14 +96,25 @@ namespace Animus {
 
     void ThreadPool::mainLoop(void) {
         while(this->running) {
-            if(!this->mainQueue.empty()) {
-                WorkItem item = this->mainQueue.pop_front();
+            //execute no more than the current number of items in the queue before yielding
+            int maxItems = this->mainQueue.size();
+            for(int j = 0; j < maxItems; j++) {
+                Optional<WorkItem> optional(this->mainQueue.pop_front_optional());
 
-                item.work();
-                if(item.loop) {
-                    this->mainQueue.push(item);
+                if(optional.isSome()) {
+                    WorkItem work = optional.get();
+                    work.work();
+
+                    if(work.loop) {
+                        this->mainQueue.push(work);
+                    }
+                }
+                else {
+                    break;
                 }
             }
+
+            //TODO: yield here
         }
     }
 
@@ -96,5 +124,24 @@ namespace Animus {
 
     void ThreadPool::deinit(void) {
         Singleton<ThreadPool>::deinitSingleton();
+    }
+
+    ThreadPool::WorkItem::WorkItem(void) {
+        this->loop = false;
+    }
+
+    ThreadPool::WorkItem::WorkItem(const WorkItem& item) {
+        this->work = item.work;
+        this->loop = item.loop;
+    }
+
+    ThreadPool::WorkItem::~WorkItem(void) {
+
+    }
+
+    ThreadPool::WorkItem& ThreadPool::WorkItem::operator=(const WorkItem& item) {
+        this->work = item.work;
+        this->loop = item.loop;
+        return *this;
     }
 }

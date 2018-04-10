@@ -2,8 +2,8 @@ FILE_NAMES_APP := app
 OBJECT_FILES_APP := $(FILE_NAMES_APP:%=app/build/%.o)
 CPP_FILES_APP := $(FILE_NAMES_APP:%=app/%.cpp)
 
-CPPFLAGS_APP:= --std=c++11 -g -fPIC -I .
-LDFLAGS_APP :=
+CPPFLAGS_APP:= $(CPPFLAGS) -fPIC -I .
+LDFLAGS_APP := $(LDFLAGS)
 
 .PHONY: build_app
 

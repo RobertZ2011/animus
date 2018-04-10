@@ -8,10 +8,10 @@
 class App : public Animus::Application {
 public:
     void init(void) override {
-        Animus::ThreadPool::getSingleton().dispatchMain([]() -> void {
-            std::cout << "I'm a work item" << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }, true);
+        Animus::ThreadPool::getSingleton().dispatchFuture<int>([]() {
+            std::cout << "I'm a work item producing results" << std::endl;
+            return 4 + 5;
+        });
     }
 
     void deinit(void) override {

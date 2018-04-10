@@ -1,8 +1,10 @@
+CPP := clang++
+CPPFLAGS := --std=c++11 -g -Wall
+LDFLAGS := -g
+
 include makefiles/Animus.make
 include makefiles/animus-loader.make
 include makefiles/app.make
-
-CPP := g++
 
 .PHONY: build
 

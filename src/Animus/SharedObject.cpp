@@ -28,6 +28,8 @@ namespace Animus {
     }
 
     SharedObject SharedObject_::create(const FilePath& path) {
-        return SharedObject(new SharedObject_(path));
+        auto so = SharedObject(new SharedObject_(path));
+        so->self = so;
+        return so;
     }
 }

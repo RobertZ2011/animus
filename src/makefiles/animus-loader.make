@@ -2,8 +2,8 @@ FILE_NAMES_ANIMUS_LOADER := main
 OBJECT_FILES_ANIMUS_LOADER := $(FILE_NAMES_ANIMUS_LOADER:%=animus-loader/build/%.o)
 CPP_FILES_ANIMUS_LOADER := $(FILE_NAMES_ANIMUS_LOADER:%=animus-loader/%.cpp)
 
-CPPFLAGS_ANIMUS_LOADER := --std=c++11 -g -I .
-LDFLAGS_ANIMUS_LOADER := -lanimus -L Animus/build
+CPPFLAGS_ANIMUS_LOADER := $(CPPFLAGS) -I .
+LDFLAGS_ANIMUS_LOADER := $(LDFLAGS) -lanimus -L Animus/build
 
 .PHONY: build_animus_loader
 

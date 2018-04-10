@@ -2,8 +2,8 @@ FILE_NAMES_ANIMUS := AtomicObject FilePath SharedObject ThreadPool Animus
 OBJECT_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/build/%.o)
 CPP_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/%.cpp)
 
-CPPFLAGS_ANIMUS := --std=c++11 -fPIC -g
-LDFLAGS_ANIMUS := -lSDL2
+CPPFLAGS_ANIMUS := $(CPPFLAGS) -fPIC
+LDFLAGS_ANIMUS := $(LDFLAGS) -lSDL2
 
 .PHONY: build_animus
 

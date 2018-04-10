@@ -2,6 +2,7 @@
 #define ANIMUS_QUEUE
 
 #include "AtomicObject.hpp"
+#include "Optional.hpp"
 
 #include <queue>
 
@@ -38,6 +39,11 @@ namespace Animus {
             this->queue.push(value);
         }
 
+        inline void push(T&& value) {
+            Lock lock(this);
+            this->queue.push(std::forward<T>(value));
+        }
+
         inline T& front(void) {
             Lock lock(this);
             return this->queue.front();
@@ -52,6 +58,18 @@ namespace Animus {
 
         inline size_t size(void) {
             return this->queue.size();
+        }
+
+        inline Optional<T> pop_front_optional(void) {
+            Lock lock(this);
+            if(this->queue.empty()) {
+                return Optional<T>();
+            }
+            else {
+                T& value = this->queue.front();
+                this->queue.pop();
+                return Optional<T>(value);
+            }
         }
 
         inline void atomically(const Function<void(UnsafeQueue<T>&)>& func) {

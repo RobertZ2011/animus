@@ -39,7 +39,7 @@ namespace Animus {
     class SharedObject_ {
     private:
         void *so;
-        SharedObject self;
+        WeakPtr<SharedObject_> self;
 
         SharedObject_(const FilePath&);
 
@@ -82,7 +82,7 @@ namespace Animus {
 
         template<typename T>
         SharedFunction<T> loadFunction(const String& name) {
-            return SharedFunction<T>(this->loadSymbol(name), this->self);
+            return SharedFunction<T>(this->loadSymbol(name), this->self.lock());
         }
 
         void *loadSymbol(const String& name);

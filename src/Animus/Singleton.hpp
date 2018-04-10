@@ -9,7 +9,7 @@ namespace Animus {
     template<class T>
     class Singleton {
     private:
-        static T* singleton;
+        static T *singleton;
 
     public:
         static T& getSingleton(void) {

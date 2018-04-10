@@ -17,6 +17,9 @@ namespace Animus {
     template<typename T>
     using Pointer = std::shared_ptr<T>;
 
+    template<typename T>
+    using WeakPtr = std::weak_ptr<T>;
+
     template<typename... T>
     using Tuple = std::tuple<T...>;
 

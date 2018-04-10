@@ -6,6 +6,8 @@
 namespace Animus {
     class Application {
     public:
+        virtual ~Application(void) = default;
+
         virtual void init(void) = 0;
         virtual void deinit(void) = 0;
 
