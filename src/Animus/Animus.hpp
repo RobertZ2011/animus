@@ -8,6 +8,7 @@
 #include "SharedObject.hpp"
 #include "ThreadPool.hpp"
 #include "types.hpp"
+#include "System.hpp"
 
 namespace Animus {
     void init(void);

@@ -3,10 +3,12 @@
 
 #include "AtomicObject.hpp"
 #include "Optional.hpp"
+#include "macros.hpp"
 
 #include <queue>
 
 namespace Animus {
+    REQUIRES_STD
     template<typename T>
     using UnsafeQueue = std::queue<T>;
 
@@ -56,20 +58,21 @@ namespace Animus {
             return value;
         }
 
-        inline size_t size(void) {
-            return this->queue.size();
-        }
-
         inline Optional<T> pop_front_optional(void) {
             Lock lock(this);
+
             if(this->queue.empty()) {
                 return Optional<T>();
             }
             else {
-                T& value = this->queue.front();
+                T item = this->queue.front();
                 this->queue.pop();
-                return Optional<T>(value);
+                return Optional<T>(item);
             }
+        }
+
+        inline size_t size(void) {
+            return this->queue.size();
         }
 
         inline void atomically(const Function<void(UnsafeQueue<T>&)>& func) {

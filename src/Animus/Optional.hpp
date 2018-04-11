@@ -33,6 +33,10 @@ namespace Animus {
         }
 
         T& get(void) {
+            if(!this->isSome()) {
+                //TODO: add exception
+            }
+
             return this->value;
         }
 

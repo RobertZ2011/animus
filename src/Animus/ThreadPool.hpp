@@ -6,11 +6,12 @@
 #include "Queue.hpp"
 #include "Vector.hpp"
 #include "Future.hpp"
+#include "macros.hpp"
 
 #include <thread>
-#include <iostream>
 
 namespace Animus {
+    REQUIRES_STD
     typedef std::thread Thread;
 
     class ThreadPool : public Singleton<ThreadPool> {
@@ -24,6 +25,13 @@ namespace Animus {
 
         ThreadPool(void);
         void threadLoop(void);
+        void queueWork(Queue<WorkItem>& queue);
+
+        REQUIRES_STD
+        static void sleep(unsigned int ms);
+
+        REQUIRES_STD
+        static void yield(void);
 
     public:
         enum class Priority {
@@ -46,10 +54,13 @@ namespace Animus {
         Future<T> dispatchFuture(const Function<T(void)>& work, Priority priority = Priority::Default) {
             Future<T> future;
 
-            std::cout << !!work << std::endl;
             this->dispatch([work, future]() mutable {
-                std::cout << !!work << std::endl;
-                future.setValue(work());
+                try {
+                    future.setValue(work());
+                }
+                catch(Exception &e) {
+                    future.setException(e);
+                }
             }, priority, false);
 
             return future;
@@ -60,7 +71,12 @@ namespace Animus {
             Future<T> future;
 
             this->dispatchMain([work, future]() mutable {
-                future.setValue(work());
+                try {
+                    future.setValue(work());
+                }
+                catch(Exception &e) {
+                    future.setException(e);
+                }
             }, false);
 
             return future;

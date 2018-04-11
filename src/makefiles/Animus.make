@@ -1,4 +1,4 @@
-FILE_NAMES_ANIMUS := AtomicObject FilePath SharedObject ThreadPool Animus
+FILE_NAMES_ANIMUS := AtomicObject FilePath SharedObject ThreadPool version System Animus
 OBJECT_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/build/%.o)
 CPP_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/%.cpp)
 

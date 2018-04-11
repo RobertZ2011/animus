@@ -18,7 +18,7 @@ namespace Animus {
 
     public:
         Future(void) {
-
+            this->data = Pointer<FutureData>(new FutureData());
         }
 
         Future(const Future& future) {
@@ -48,7 +48,7 @@ namespace Animus {
             this->wait();
 
             Lock lock(this);
-            if(this->data->value.isSome) {
+            if(this->data->value.isSome()) {
                 return this->data->value.get();
             }
             else {

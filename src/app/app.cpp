@@ -5,12 +5,22 @@
 #include <thread>
 #include <chrono>
 
-class App : public Animus::Application {
+using namespace Animus;
+
+class App : public Application {
 public:
     void init(void) override {
-        Animus::ThreadPool::getSingleton().dispatchFuture<int>([]() {
-            std::cout << "I'm a work item producing results" << std::endl;
-            return 4 + 5;
+        ThreadPool::getSingleton().dispatchMain([]() {
+            std::cout << "I'm a work item waiting for results" << std::endl;
+
+            Future<int> f = ThreadPool::getSingleton().dispatchFuture<int>([]() {
+                std:: cout << "I'm a work item returning results" << std::endl;
+                return 4 + 5;
+            });
+
+            int r = f.get();
+            std::cout << "Got " << r << std::endl;
+            ThreadPool::getSingleton().shutdown();
         });
     }
 
@@ -18,24 +28,24 @@ public:
 
     }
 
-    Animus::String getName(void) override {
+    String getName(void) override {
         return "Test App";
     }
 
-    Animus::Version getVersion(void) override {
-        return Animus::Version(0, 0, 1);
+    Version getVersion(void) override {
+        return Version(0, 0, 1);
     }
 
-    Animus::Version getMinimumAnimusVersion(void) override {
-        return Animus::getVersion();
+    Version getMinimumAnimusVersion(void) override {
+        return getVersion();
     }
 };
 
 
-Animus::Application *create_animus_application(void) {
+Application *create_animus_application(void) {
     return new App();
 }
 
-void destroy_animus_application(Animus::Application *app) {
+void destroy_animus_application(Application *app) {
     delete app;
 }

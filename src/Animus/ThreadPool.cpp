@@ -1,10 +1,12 @@
 #include "ThreadPool.hpp"
 
 #include <SDL2/SDL.h>
+#include <chrono>
+#include <cstdlib>
+
+#include <iostream>
 
 namespace Animus {
-    ANIMUS_DEFINE_SINGLETON(ThreadPool);
-
     ThreadPool::ThreadPool(void) {
         //seems to give the number of logical processors, divide by 2 to get physical
         //subtract 1 for the main thread
@@ -12,6 +14,7 @@ namespace Animus {
         numThreads = (numThreads <= 0) ? 1 : numThreads; //make sure we have at least one thread
 
         this->running = true;
+
         for(int i = 0; i < numThreads; i++) {
             this->threads.push_back(Thread([this] {
                 this->threadLoop();
@@ -49,72 +52,82 @@ namespace Animus {
         this->mainQueue.push(item);
     }
 
-    void ThreadPool::threadLoop(void) {
-        while(this->running) {
-            for(int i = (int) ThreadPool::Priority::High; i < (int) ThreadPool::Priority::Low; i++) {
-                if(!this->queues[i].empty()) {
-                    WorkItem item = this->queues[i].pop_front();
+    void ThreadPool::queueWork(Queue<WorkItem>& queue) {
+        //execute no more than the current number of items in the queue
+        int maxItems = queue.size();
+        for(int j = 0; j < maxItems; j++) {
+            Optional<WorkItem> optional = queue.pop_front_optional();
 
-                    item.work();
+            if(optional.isSome()) {
+                WorkItem work = optional.get();
+                work.work();
+
+                //don't requeue an item if the pool has stopped running
+                if(work.loop && this->running) {
+                    queue.push(work);
                 }
-                //for each queue, execute no more than the current number of items in the queue
-                //then move to the next queue
-                /*int maxItems = this->queues[i].size();
-                for(int j = 0; j < maxItems; j++) {
-                    Optional<WorkItem> optional = this->queues[i].pop_front_optional();
+            }
+            else {
+                break;
+            }
+        }
+    }
 
-                    if(optional.isSome()) {
-                        WorkItem work(optional.get());
-                        work.work();
+    void ThreadPool::yield(void) {
+        std::this_thread::yield();
+    }
 
-                        if(work.loop) {
-                            this->queues[i].push(work);
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                }*/
+    void ThreadPool::sleep(unsigned int ms) {
+        std::this_thread::sleep_for(std::chrono::duration<unsigned int, std::milli>(ms));
+    }
+
+    void ThreadPool::threadLoop(void) {
+        while(1) {
+            for(int i = (int) ThreadPool::Priority::High; i < (int) ThreadPool::Priority::Low; i++) {
+                this->queueWork(this->queues[i]);
             }
 
-            //TODO: yield here
-        }
-    }
-
-    void ThreadPool::shutdown(void) {
-        //if we're not running then the pool has already been shutdown
-        if(!this->running) {
-            return;
-        }
-
-        this->running = false;
-
-        for(auto& thread : this->threads) {
-            thread.join();
-        }
-    }
-
-    void ThreadPool::mainLoop(void) {
-        while(this->running) {
-            //execute no more than the current number of items in the queue before yielding
-            int maxItems = this->mainQueue.size();
-            for(int j = 0; j < maxItems; j++) {
-                Optional<WorkItem> optional(this->mainQueue.pop_front_optional());
-
-                if(optional.isSome()) {
-                    WorkItem work = optional.get();
-                    work.work();
-
-                    if(work.loop) {
-                        this->mainQueue.push(work);
+            if(!this->running) {
+                //only exit if all work is done
+                bool stop = true;
+                for(int i = (int) ThreadPool::Priority::High; i < (int) ThreadPool::Priority::Low; i++) {
+                    if(!this->queues[i].empty()) {
+                        stop = false;
                     }
                 }
-                else {
+
+                if(stop) {
                     break;
                 }
             }
 
-            //TODO: yield here
+            ThreadPool::yield();
+        }
+    }
+
+    void ThreadPool::shutdown(void) {
+        this->running = false;
+    }
+
+    void ThreadPool::mainLoop(void) {
+        while(1) {
+            //execute no more than the current number of items in the queue before yielding
+            int maxItems = this->mainQueue.size();
+            for(int j = 0; j < maxItems; j++) {
+                this->queueWork(this->mainQueue);
+            }
+
+            //exit the loop if the pool is shutdown and all work is done
+            if(!this->running && this->mainQueue.empty()) {
+                break;
+            }
+
+            ThreadPool::yield();
+        }
+
+        //Wait until all other threads are finished before continuing
+        for(auto& thread : this->threads) {
+            thread.join();
         }
     }
 

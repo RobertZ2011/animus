@@ -8,31 +8,40 @@
 #include <exception>
 #include <atomic>
 
+#include "version.hpp"
+#include "macros.hpp"
+
 namespace Animus {
+    REQUIRES_STD
     typedef std::string String;
 
+    REQUIRES_STD
     template<typename T>
     using Function = std::function<T>;
 
+    REQUIRES_STD
     template<typename T>
     using Pointer = std::shared_ptr<T>;
 
+    REQUIRES_STD
     template<typename T>
     using WeakPtr = std::weak_ptr<T>;
 
+    REQUIRES_STD
     template<typename... T>
     using Tuple = std::tuple<T...>;
 
-    typedef Tuple<int, int, int> Version;
-
+    REQUIRES_STD
     typedef std::exception Exception;
 
+    REQUIRES_STD
     template<typename T>
     using Atomic = std::atomic<T>;
 
     /*typedef glm::ivec2 Vec2i;
     typedef glm::vec2 Vec2f;
     typedef glm::gtc::quat Quat;*/
+
 }
 
 #endif

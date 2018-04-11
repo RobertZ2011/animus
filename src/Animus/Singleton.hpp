@@ -3,8 +3,6 @@
 
 #include "types.hpp"
 
-#define ANIMUS_DEFINE_SINGLETON(t) template<> t *Singleton<t>::singleton = nullptr;
-
 namespace Animus {
     template<class T>
     class Singleton {
@@ -12,6 +10,8 @@ namespace Animus {
         static T *singleton;
 
     public:
+        virtual ~Singleton() = default;
+
         static T& getSingleton(void) {
             return *Singleton<T>::singleton;
         }
@@ -24,5 +24,8 @@ namespace Animus {
             delete Singleton<T>::singleton;
         }
     };
+
+    template<typename T>
+    T *Singleton<T>::singleton = nullptr;
 }
 #endif

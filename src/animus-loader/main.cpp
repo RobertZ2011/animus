@@ -14,6 +14,11 @@ int main(int argc, char **argv) {
         auto destroyApp = sharedObject->loadFunction<destroyAppType>("destroy_animus_application");
 
         Application *app = createApp();
+
+        if(app->getMinimumAnimusVersion() > getVersion()) {
+            System::fail("Application requires more recent engine version");
+        }
+
         app->init();
 
         ThreadPool::getSingleton().mainLoop();
@@ -24,7 +29,7 @@ int main(int argc, char **argv) {
         deinit();
     }
     catch(Animus::Exception& e) {
-        std::cerr << "Uncaught exception: " << e.what() << std::endl;
+        System::fail(e);
     }
     return 0;
 }

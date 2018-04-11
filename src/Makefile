@@ -1,5 +1,5 @@
 CPP := clang++
-CPPFLAGS := --std=c++11 -g -Wall
+CPPFLAGS := --std=c++11 -g -Wall -Werror -DANIMUS_USE_STD
 LDFLAGS := -g
 
 include makefiles/Animus.make

@@ -2,10 +2,12 @@
 #define ANIMUS_VECTOR
 
 #include "AtomicObject.hpp"
+#include "macros.hpp"
 
 #include <vector>
 
 namespace Animus {
+    REQUIRES_STD
     template<typename T>
     using UnsafeVector = std::vector<T>;
 
@@ -28,6 +30,7 @@ namespace Animus {
             this->vector.push_back(value);
         }
 
+        REQUIRES_STD
         inline void push_back(T&& value) {
             Lock lock(this);
             this->vector.push_back(std::forward<T>(value));
