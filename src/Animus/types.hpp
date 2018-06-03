@@ -8,6 +8,8 @@
 #include <exception>
 #include <atomic>
 
+#include <glm/glm.hpp>
+
 #include "version.hpp"
 #include "macros.hpp"
 
@@ -38,10 +40,10 @@ namespace Animus {
     template<typename T>
     using Atomic = std::atomic<T>;
 
-    /*typedef glm::ivec2 Vec2i;
+    typedef glm::ivec2 Vec2i;
     typedef glm::vec2 Vec2f;
-    typedef glm::gtc::quat Quat;*/
-
+    TODO("Add support for GLM quaternions")
+    //typedef glm::gtc::quat Quat;
 }
 
 #endif

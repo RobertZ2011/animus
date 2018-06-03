@@ -1,10 +1,12 @@
 CPP := clang++
-CPPFLAGS := --std=c++11 -g -Wall -Werror -DANIMUS_USE_STD
+CPPFLAGS := --std=c++11 -g -Wall -Werror -DANIMUS_USE_STD -DANIMUS_USE_VULKAN -DANIMUS_ALLOW_TODO
+AR := ar
 LDFLAGS := -g
 
 include makefiles/Animus.make
 include makefiles/animus-loader.make
 include makefiles/app.make
+include makefiles/vulkan.make
 
 .PHONY: build
 

@@ -7,9 +7,14 @@
 namespace Animus {
     class AtomicObject {
     private:
+        REQUIRES_STD
         std::mutex mutex;
 
     public:
+        AtomicObject(AtomicObject&& object);
+        AtomicObject(void) = default;
+        ~AtomicObject(void) = default;
+
         void lock(void);
         void unlock(void);
         bool trylock(void);

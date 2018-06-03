@@ -9,6 +9,7 @@
 #include "ThreadPool.hpp"
 #include "types.hpp"
 #include "System.hpp"
+#include "Backend.hpp"
 
 namespace Animus {
     void init(void);

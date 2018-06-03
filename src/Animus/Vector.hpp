@@ -5,6 +5,7 @@
 #include "macros.hpp"
 
 #include <vector>
+#include <initializer_list>
 
 namespace Animus {
     REQUIRES_STD
@@ -21,8 +22,26 @@ namespace Animus {
 
         }
 
+        Vector(Vector<T>&& vec) : AtomicObject(vec) {
+            Lock lock(this);
+            this->vector = std::move(vec.vector);
+        }
+
+        REQUIRES_STD
+        Vector(const std::initializer_list<T>& list) {
+            Lock lock(this);
+            for(auto v: list) {
+                this->vector.push_back(v);
+            }
+        }
+
         ~Vector(void) {
 
+        }
+
+        inline Vector<T>& operator=(Vector<T>&& vec) {
+            AtomicObject::operator=(vec);
+            this->vector = std::move(vec.vector);
         }
 
         inline void push_back(const T& value) {

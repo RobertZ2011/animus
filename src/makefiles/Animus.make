@@ -1,9 +1,9 @@
-FILE_NAMES_ANIMUS := AtomicObject FilePath SharedObject ThreadPool version System Animus
+FILE_NAMES_ANIMUS := AtomicObject FilePath SharedObject ThreadPool version Backend System Animus Window
 OBJECT_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/build/%.o)
 CPP_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/%.cpp)
 
-CPPFLAGS_ANIMUS := $(CPPFLAGS) -fPIC
-LDFLAGS_ANIMUS := $(LDFLAGS) -lSDL2
+CPPFLAGS_ANIMUS := $(CPPFLAGS) -fPIC `pkg-config --cflags sdl2`
+LDFLAGS_ANIMUS := $(LDFLAGS) `pkg-config --libs sdl2`
 
 .PHONY: build_animus
 

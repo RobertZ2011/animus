@@ -6,9 +6,11 @@ namespace Animus {
     void init(void) {
         SDL_Init(SDL_INIT_EVERYTHING);
         ThreadPool::init();
+        BackendManager::init();
     }
 
     void deinit(void) {
+        BackendManager::deinit();
         ThreadPool::deinit();
         SDL_Quit();
     }
