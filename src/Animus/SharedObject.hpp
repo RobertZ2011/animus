@@ -4,6 +4,8 @@
 #include "types.hpp"
 #include "FilePath.hpp"
 
+#include <iostream>
+
 namespace Animus {
     class SharedObject_;
     typedef Pointer<SharedObject_> SharedObject;
@@ -23,15 +25,22 @@ namespace Animus {
             this->func = reinterpret_cast<R(*)(ARGS...)>(ptr);
         }
 
+        SharedFunction(void) {
+        }
+
         ~SharedFunction(void) {
 
         }
 
-        R operator()(ARGS... args) const {
+        void destroy(void) {
+            this->so = nullptr;
+        }
+
+        inline R operator()(ARGS... args) const {
             return this->func(args...);
         }
 
-        explicit operator bool(void) const {
+        inline explicit operator bool(void) const {
             return !!this->func;
         }
     };
@@ -46,35 +55,31 @@ namespace Animus {
     public:
         class CannotOpen : public Exception {
         private:
-            FilePath path;
+            String message;
         public:
             CannotOpen(const FilePath& path) {
-                this->path = path;
+                this->message = String("Cannot load shared library: ") + path.str();
             }
 
-            ~CannotOpen(void) {
-
-            }
+            ~CannotOpen(void) = default;
 
             const char  *what(void) const noexcept override {
-                return "Cannot load shared library";
+                return this->message.c_str();
             }
         };
 
         class NoFunction : public Exception {
         private:
-            String function;
+            String message;
         public:
             NoFunction(const String& function) {
-                this->function = function;
+                this->message = String("Cannot load shared object function: ") + function;
             }
 
-            ~NoFunction(void) {
+            ~NoFunction(void) = default;
 
-            }
-
-            const char * what(void) const noexcept override {
-                return "Cannot load shared object function";
+            const char *what(void) const noexcept override {
+                return this->message.c_str();
             }
         };
 

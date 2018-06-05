@@ -2,7 +2,6 @@
 #define ANIMUS_TYPES
 
 #include <functional>
-#include <string>
 #include <memory>
 #include <tuple>
 #include <exception>
@@ -12,11 +11,9 @@
 
 #include "version.hpp"
 #include "macros.hpp"
+#include "String.hpp"
 
 namespace Animus {
-    REQUIRES_STD
-    typedef std::string String;
-
     REQUIRES_STD
     template<typename T>
     using Function = std::function<T>;
@@ -39,6 +36,10 @@ namespace Animus {
     REQUIRES_STD
     template<typename T>
     using Atomic = std::atomic<T>;
+
+    REQUIRES_STD
+    template<typename A, typename B>
+    using Pair = std::pair<A, B>;
 
     typedef glm::ivec2 Vec2i;
     typedef glm::vec2 Vec2f;

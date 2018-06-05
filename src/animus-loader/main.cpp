@@ -1,5 +1,4 @@
 #include <Animus/Animus.hpp>
-#include <iostream>
 
 typedef Animus::Application*(createAppType)(void);
 typedef void(destroyAppType)(Animus::Application*);
@@ -16,7 +15,7 @@ int main(int argc, char **argv) {
         Application *app = createApp();
 
         if(app->getMinimumAnimusVersion() > getVersion()) {
-            System::fail("Application requires more recent engine version");
+            Log::getSingleton().fatalStr("Application requires more recent engine version");
         }
 
         app->init();

@@ -1,4 +1,4 @@
-FILE_NAMES_ANIMUS := AtomicObject FilePath SharedObject ThreadPool version Backend System Animus Window
+FILE_NAMES_ANIMUS := String AtomicObject FilePath SharedObject ThreadPool version Error Directory File Log Backend System Animus Window
 OBJECT_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/build/%.o)
 CPP_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/%.cpp)
 

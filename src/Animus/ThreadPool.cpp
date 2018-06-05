@@ -1,4 +1,5 @@
 #include "ThreadPool.hpp"
+#include "Log.hpp"
 
 #include <SDL2/SDL.h>
 #include <chrono>
@@ -8,6 +9,7 @@
 
 namespace Animus {
     ThreadPool::ThreadPool(void) {
+        Log::getSingleton().logStr("ThreadPool begin init");
         //seems to give the number of logical processors, divide by 2 to get physical
         //subtract 1 for the main thread
         int numThreads = Thread::hardware_concurrency() / 2 - 1;
@@ -20,10 +22,12 @@ namespace Animus {
                 this->threadLoop();
             }));
         }
+
+        Log::getSingleton().logStr("ThreadPool initialized");
     }
 
     ThreadPool::~ThreadPool(void) {
-
+        Log::getSingleton().logStr("ThreadPool deinit");
     }
 
     void ThreadPool::dispatch(const Function<void(void)>& work, ThreadPool::Priority priority, bool loop) {
@@ -106,6 +110,7 @@ namespace Animus {
     }
 
     void ThreadPool::shutdown(void) {
+        Log::getSingleton().logStr("ThreadPool shutdown");
         this->running = false;
     }
 
@@ -129,6 +134,8 @@ namespace Animus {
         for(auto& thread : this->threads) {
             thread.join();
         }
+
+        Log::getSingleton().logStr("Main loop complete");
     }
 
     void ThreadPool::init(void) {

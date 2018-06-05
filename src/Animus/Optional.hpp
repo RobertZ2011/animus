@@ -34,7 +34,7 @@ namespace Animus {
 
         T& get(void) {
             if(!this->isSome()) {
-                //TODO: add exception
+                TODO("add exception to Optional");
             }
 
             return this->value;

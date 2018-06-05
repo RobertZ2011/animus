@@ -1,5 +1,7 @@
 #include "version.hpp"
 
+#include <sstream>
+
 namespace Animus {
     bool operator>(const Version& lhs, const Version& rhs) {
         int majorLhs = std::get<0>(lhs);
@@ -25,5 +27,13 @@ namespace Animus {
         }
 
         return false;
+    }
+
+    template<>
+    String toString<Version>(Version version) {
+        std::stringstream stream;
+
+        stream << std::get<0>(version) << '.' << std::get<1>(version) << '.' << std::get<2>(version);
+        return stream.str();
     }
 }

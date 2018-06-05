@@ -1,10 +1,6 @@
 #include "AtomicObject.hpp"
 
 namespace Animus {
-    AtomicObject::AtomicObject(AtomicObject&& object) : mutex(std::move(object.mutex)) {
-        
-    }
-
     void AtomicObject::lock(void) {
         this->mutex.lock();
     }

@@ -1,4 +1,5 @@
 #include "SharedObject.hpp"
+#include "Log.hpp"
 
 #include <SDL2/SDL.h>
 
@@ -7,6 +8,7 @@ namespace Animus {
         this->so = SDL_LoadObject(path.c_str());
 
         if(!this->so) {
+            Log::getSingleton().errorStr(String(SDL_GetError()));
             throw SharedObject_::CannotOpen(path);
         }
     }

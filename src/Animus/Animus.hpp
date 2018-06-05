@@ -10,11 +10,18 @@
 #include "types.hpp"
 #include "System.hpp"
 #include "Backend.hpp"
+#include "Window.hpp"
+#include "FilePath.hpp"
+#include "Directory.hpp"
+#include "Error.hpp"
+#include "Log.hpp"
+#include "Backend.hpp"
 
 namespace Animus {
     void init(void);
     void deinit(void);
 
     Version getVersion(void);
+    FilePath getEngineBase(void);
 }
 #endif

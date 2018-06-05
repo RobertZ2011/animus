@@ -11,15 +11,12 @@ class App : public Application {
 public:
     void init(void) override {
         ThreadPool::getSingleton().dispatchMain([]() {
-            std::cout << "I'm a work item waiting for results" << std::endl;
+            auto window = Window_::create(Vec2i(640, 480), "Test");
+            Backend *backend = BackendManager::getSingleton().getDefaultBackend();
 
-            Future<int> f = ThreadPool::getSingleton().dispatchFuture<int>([]() {
-                std:: cout << "I'm a work item returning results" << std::endl;
-                return 4 + 5;
-            });
+            backend->init();
 
-            int r = f.get();
-            std::cout << "Got " << r << std::endl;
+            std::cin.get();
             ThreadPool::getSingleton().shutdown();
         });
     }

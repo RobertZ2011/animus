@@ -3,6 +3,8 @@
 
 #include "types.hpp"
 
+#include <exception>
+
 namespace Animus {
     class FilePath {
         String path;
@@ -14,6 +16,17 @@ namespace Animus {
         FilePath(const FilePath& path);
         String str(void) const;
         const char *c_str(void) const;
+
+        FilePath operator+(const FilePath& path);
+        FilePath operator+(const char *path);
+        FilePath operator+(const String& path);
+
+        bool exists(void) const;
+        bool isFile(void) const;
+        bool isDirectory(void) const;
     };
+
+    template<>
+    String toString(FilePath path);
 }
 #endif

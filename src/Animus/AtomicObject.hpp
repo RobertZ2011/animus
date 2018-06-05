@@ -11,7 +11,6 @@ namespace Animus {
         std::mutex mutex;
 
     public:
-        AtomicObject(AtomicObject&& object);
         AtomicObject(void) = default;
         ~AtomicObject(void) = default;
 

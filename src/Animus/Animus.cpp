@@ -4,6 +4,7 @@
 
 namespace Animus {
     void init(void) {
+        Log::init();
         SDL_Init(SDL_INIT_EVERYTHING);
         ThreadPool::init();
         BackendManager::init();
@@ -13,6 +14,7 @@ namespace Animus {
         BackendManager::deinit();
         ThreadPool::deinit();
         SDL_Quit();
+        Log::deinit();
     }
 
     Version getVersion(void) {

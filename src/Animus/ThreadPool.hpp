@@ -24,6 +24,7 @@ namespace Animus {
         Atomic<bool> running;
 
         ThreadPool(void);
+
         void threadLoop(void);
         void queueWork(Queue<WorkItem>& queue);
 

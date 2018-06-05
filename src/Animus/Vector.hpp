@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <initializer_list>
+#include <algorithm>
 
 namespace Animus {
     REQUIRES_STD
@@ -22,7 +23,16 @@ namespace Animus {
 
         }
 
-        Vector(Vector<T>&& vec) : AtomicObject(vec) {
+        Vector(const Vector<T>& vec) {
+            Lock lock1(vec);
+            Lock lock2(this);
+
+            for(size_t i = 0; i < vec.size(); i++) {
+                this->push_back(vec[i]);
+            }
+        }
+
+        Vector(Vector<T>&& vec) {
             Lock lock(this);
             this->vector = std::move(vec.vector);
         }
@@ -39,9 +49,11 @@ namespace Animus {
 
         }
 
-        inline Vector<T>& operator=(Vector<T>&& vec) {
-            AtomicObject::operator=(vec);
-            this->vector = std::move(vec.vector);
+        inline Vector<T>& operator=(const std::initializer_list<T>& list) {
+            Lock lock(this);
+            for(auto v: list) {
+                this->vector.push_back(v);
+            }
         }
 
         inline void push_back(const T& value) {
@@ -58,6 +70,24 @@ namespace Animus {
         inline T& operator[](size_t index) {
             Lock lock(this);
             return this->vector[index];
+        }
+
+        inline size_t size(void) {
+            Lock lock(this);
+            return this->vector.size();
+        }
+
+        REQUIRES_STD
+        inline void filterInPlace(const Function<bool(const T&)>& func) {
+            Lock lock(this);
+            this->vector.erase(std::remove_if(this->vector.begin(),
+                this->vector.end(),
+                func
+            ));
+        }
+
+        UnsafeVector<T> toUnsafe(void) const {
+            return this->vector;
         }
 
         //allows a function to mutate the underlying vector with only one lock call
