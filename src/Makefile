@@ -1,5 +1,5 @@
 CPP := clang++
-CPPFLAGS := --std=c++11 -g -Wall -Werror -DANIMUS_USE_STD -DANIMUS_ALLOW_TODO -DANIMUS_USE_SDL
+CPPFLAGS := --std=c++11 -g -Wall -Werror -DANIMUS_USE_STD -DANIMUS_ALLOW_TODO -DANIMUS_USE_SDL -DDEBUG
 AR := ar
 LDFLAGS := -g
 
@@ -13,7 +13,7 @@ include makefiles/vulkan.make
 build:
 	-mkdir -p build/backends
 
-all: backends animus animus_loader app build
+all: animus backends animus_loader app build
 	cp Animus/build/libanimus.so build/
 	cp animus-loader/build/animus-loader build/
 	cp app/build/libapp.so build/

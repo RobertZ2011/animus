@@ -5,10 +5,10 @@
 #include "version.hpp"
 
 namespace Animus {
-    class _ComputeInterface;
-    typedef Pointer<_ComputeInterface> ComputeInterface;
+    class ComputeInterface_;
+    typedef Pointer<ComputeInterface_> ComputeInterface;
 
-    class _ComputeInterface {
+    class ComputeInterface_ {
     public:
         virtual String getName(void) = 0;
         virtual Version getVersion(void) = 0;

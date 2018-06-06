@@ -1,0 +1,399 @@
+#include "functions.hpp"
+
+Animus::SharedFunction<PFN_vkVoidFunction(VkInstance, const char*)> vkGetInstanceProcAddr;
+PFN_vkCreateInstance vkCreateInstance = nullptr;
+PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties = nullptr;
+PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties = nullptr;
+PFN_vkEnumerateInstanceVersion vkEnumerateInstanceVersion = nullptr;
+
+PFN_vkAcquireNextImage2KHR vkAcquireNextImage2KHR = nullptr;
+PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR = nullptr;
+
+#ifdef VK_USE_PLATFORM_XLIB_XRANDR_NV
+    PFN_vkAcquireXlibDisplayEXT vkAcquireXlibDisplayEXT = nullptr;
+#endif
+
+PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers = nullptr;
+PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets = nullptr;
+PFN_vkAllocateMemory vkAllocateMemory = nullptr;
+PFN_vkBeginCommandBuffer vkBeginCommandBuffer = nullptr;
+PFN_vkBindBufferMemory vkBindBufferMemory = nullptr;
+PFN_vkBindBufferMemory2 vkBindBufferMemory2 = nullptr;
+PFN_vkBindBufferMemory2KHR vkBindBufferMemory2KHR = nullptr;
+PFN_vkBindImageMemory vkBindImageMemory = nullptr;
+PFN_vkBindImageMemory2 vkBindImageMemory2 = nullptr;
+PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR = nullptr;
+PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT = nullptr;
+PFN_vkCmdBeginQuery vkCmdBeginQuery = nullptr;
+PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass = nullptr;
+PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets = nullptr;
+PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer = nullptr;
+PFN_vkCmdBindPipeline vkCmdBindPipeline = nullptr;
+PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers = nullptr;
+PFN_vkCmdBlitImage vkCmdBlitImage = nullptr;
+PFN_vkCmdClearAttachments vkCmdClearAttachments = nullptr;
+PFN_vkCmdClearColorImage vkCmdClearColorImage = nullptr;
+PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage = nullptr;
+PFN_vkCmdCopyBuffer vkCmdCopyBuffer = nullptr;
+PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage = nullptr;
+PFN_vkCmdCopyImage vkCmdCopyImage = nullptr;
+PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer = nullptr;
+PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults = nullptr;
+PFN_vkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXT = nullptr;
+PFN_vkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXT = nullptr;
+PFN_vkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXT = nullptr;
+PFN_vkCmdDispatch vkCmdDispatch = nullptr;
+PFN_vkCmdDispatchBase vkCmdDispatchBase = nullptr;
+PFN_vkCmdDispatchBaseKHR vkCmdDispatchBaseKHR = nullptr;
+PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect = nullptr;
+PFN_vkCmdDraw vkCmdDraw = nullptr;
+PFN_vkCmdDrawIndexed vkCmdDrawIndexed = nullptr;
+PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect = nullptr;
+PFN_vkCmdDrawIndexedIndirectCountAMD vkCmdDrawIndexedIndirectCountAMD = nullptr;
+PFN_vkCmdDrawIndexedIndirectCountKHR vkCmdDrawIndexedIndirectCountKHR = nullptr;
+PFN_vkCmdDrawIndirect vkCmdDrawIndirect = nullptr;
+PFN_vkCmdDrawIndirectCountAMD vkCmdDrawIndirectCountAMD = nullptr;
+PFN_vkCmdDrawIndirectCountKHR vkCmdDrawIndirectCountKHR = nullptr;
+PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT = nullptr;
+PFN_vkCmdEndQuery vkCmdEndQuery = nullptr;
+PFN_vkCmdEndRenderPass vkCmdEndRenderPass = nullptr;
+PFN_vkCmdExecuteCommands vkCmdExecuteCommands = nullptr;
+PFN_vkCmdFillBuffer vkCmdFillBuffer = nullptr;
+PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT = nullptr;
+PFN_vkCmdNextSubpass vkCmdNextSubpass = nullptr;
+PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier = nullptr;
+PFN_vkCmdProcessCommandsNVX vkCmdProcessCommandsNVX = nullptr;
+PFN_vkCmdPushConstants vkCmdPushConstants = nullptr;
+PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR = nullptr;
+PFN_vkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHR = nullptr;
+PFN_vkCmdReserveSpaceForCommandsNVX vkCmdReserveSpaceForCommandsNVX = nullptr;
+PFN_vkCmdResetEvent vkCmdResetEvent = nullptr;
+PFN_vkCmdResetQueryPool vkCmdResetQueryPool = nullptr;
+PFN_vkCmdResolveImage vkCmdResolveImage = nullptr;
+PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants = nullptr;
+PFN_vkCmdSetDepthBias vkCmdSetDepthBias = nullptr;
+PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds = nullptr;
+PFN_vkCmdSetDeviceMask vkCmdSetDeviceMask = nullptr;
+PFN_vkCmdSetDeviceMaskKHR vkCmdSetDeviceMaskKHR = nullptr;
+PFN_vkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXT = nullptr;
+PFN_vkCmdSetEvent vkCmdSetEvent = nullptr;
+PFN_vkCmdSetLineWidth vkCmdSetLineWidth = nullptr;
+PFN_vkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXT = nullptr;
+PFN_vkCmdSetScissor vkCmdSetScissor = nullptr;
+PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask = nullptr;
+PFN_vkCmdSetStencilReference vkCmdSetStencilReference = nullptr;
+PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask = nullptr;
+PFN_vkCmdSetViewport vkCmdSetViewport = nullptr;
+PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV = nullptr;
+PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer = nullptr;
+PFN_vkCmdWaitEvents vkCmdWaitEvents = nullptr;
+PFN_vkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMD = nullptr;
+PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp = nullptr;
+
+#ifdef VK_USE_PLATFORM_ANDROID_KHR
+    PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR = nullptr;
+#endif
+
+PFN_vkCreateBuffer vkCreateBuffer = nullptr;
+PFN_vkCreateBufferView vkCreateBufferView = nullptr;
+PFN_vkCreateCommandPool vkCreateCommandPool = nullptr;
+PFN_vkCreateComputePipelines vkCreateComputePipelines = nullptr;
+PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT = nullptr;
+PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT = nullptr;
+PFN_vkCreateDescriptorPool vkCreateDescriptorPool = nullptr;
+PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout = nullptr;
+PFN_vkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplate = nullptr;
+PFN_vkCreateDescriptorUpdateTemplateKHR vkCreateDescriptorUpdateTemplateKHR = nullptr;
+PFN_vkCreateDevice vkCreateDevice = nullptr;
+PFN_vkCreateDisplayModeKHR vkCreateDisplayModeKHR = nullptr;
+PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR = nullptr;
+PFN_vkCreateEvent vkCreateEvent = nullptr;
+PFN_vkCreateFence vkCreateFence = nullptr;
+PFN_vkCreateFramebuffer vkCreateFramebuffer = nullptr;
+PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines = nullptr;
+
+#ifdef VK_USE_PLATFORM_IOS_MVK
+    PFN_vkCreateIOSSurfaceMVK vkCreateIOSSurfaceMVK = nullptr;
+#endif
+
+PFN_vkCreateImage vkCreateImage = nullptr;
+PFN_vkCreateImageView vkCreateImageView = nullptr;
+PFN_vkCreateIndirectCommandsLayoutNVX vkCreateIndirectCommandsLayoutNVX = nullptr;
+
+#ifdef VK_USE_PLATFORM_MACOS_MVK
+    PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_MIR_KHR
+    PFN_vkCreateMirSurfaceKHR vkCreateMirSurfaceKHR = nullptr;
+#endif
+
+PFN_vkCreateObjectTableNVX vkCreateObjectTableNVX = nullptr;
+PFN_vkCreatePipelineCache vkCreatePipelineCache = nullptr;
+PFN_vkCreatePipelineLayout vkCreatePipelineLayout = nullptr;
+PFN_vkCreateQueryPool vkCreateQueryPool = nullptr;
+PFN_vkCreateRenderPass vkCreateRenderPass = nullptr;
+PFN_vkCreateSampler vkCreateSampler = nullptr;
+PFN_vkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversion = nullptr;
+PFN_vkCreateSamplerYcbcrConversionKHR vkCreateSamplerYcbcrConversionKHR = nullptr;
+PFN_vkCreateSemaphore vkCreateSemaphore = nullptr;
+PFN_vkCreateShaderModule vkCreateShaderModule = nullptr;
+PFN_vkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHR = nullptr;
+PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR = nullptr;
+PFN_vkCreateValidationCacheEXT vkCreateValidationCacheEXT = nullptr;
+
+#ifdef VK_USE_PLATFORM_VI_NN
+    PFN_vkCreateViSurfaceNN vkCreateViSurfaceNN = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_WAYLAND_KHR
+    PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_XCB_KHR
+    PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_XLIB_KHR
+    PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR = nullptr;
+#endif
+
+PFN_vkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXT = nullptr;
+PFN_vkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXT = nullptr;
+PFN_vkDebugReportMessageEXT vkDebugReportMessageEXT = nullptr;
+PFN_vkDestroyBuffer vkDestroyBuffer = nullptr;
+PFN_vkDestroyBufferView vkDestroyBufferView = nullptr;
+PFN_vkDestroyCommandPool vkDestroyCommandPool = nullptr;
+PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
+PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT = nullptr;
+PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool = nullptr;
+PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout = nullptr;
+PFN_vkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplate = nullptr;
+PFN_vkDestroyDescriptorUpdateTemplateKHR vkDestroyDescriptorUpdateTemplateKHR = nullptr;
+PFN_vkDestroyDevice vkDestroyDevice = nullptr;
+PFN_vkDestroyEvent vkDestroyEvent = nullptr;
+PFN_vkDestroyFence vkDestroyFence = nullptr;
+PFN_vkDestroyFramebuffer vkDestroyFramebuffer = nullptr;
+PFN_vkDestroyImage vkDestroyImage = nullptr;
+PFN_vkDestroyImageView vkDestroyImageView = nullptr;
+PFN_vkDestroyIndirectCommandsLayoutNVX vkDestroyIndirectCommandsLayoutNVX = nullptr;
+PFN_vkDestroyInstance vkDestroyInstance = nullptr;
+PFN_vkDestroyObjectTableNVX vkDestroyObjectTableNVX = nullptr;
+PFN_vkDestroyPipeline vkDestroyPipeline = nullptr;
+PFN_vkDestroyPipelineCache vkDestroyPipelineCache = nullptr;
+PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout = nullptr;
+PFN_vkDestroyQueryPool vkDestroyQueryPool = nullptr;
+PFN_vkDestroyRenderPass vkDestroyRenderPass = nullptr;
+PFN_vkDestroySampler vkDestroySampler = nullptr;
+PFN_vkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversion = nullptr;
+PFN_vkDestroySamplerYcbcrConversionKHR vkDestroySamplerYcbcrConversionKHR = nullptr;
+PFN_vkDestroySemaphore vkDestroySemaphore = nullptr;
+PFN_vkDestroyShaderModule vkDestroyShaderModule = nullptr;
+PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR = nullptr;
+PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR = nullptr;
+PFN_vkDestroyValidationCacheEXT vkDestroyValidationCacheEXT = nullptr;
+PFN_vkDeviceWaitIdle vkDeviceWaitIdle = nullptr;
+PFN_vkDisplayPowerControlEXT vkDisplayPowerControlEXT = nullptr;
+PFN_vkEndCommandBuffer vkEndCommandBuffer = nullptr;
+PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties = nullptr;
+PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties = nullptr;
+PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups = nullptr;
+PFN_vkEnumeratePhysicalDeviceGroupsKHR vkEnumeratePhysicalDeviceGroupsKHR = nullptr;
+PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices = nullptr;
+PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges = nullptr;
+PFN_vkFreeCommandBuffers vkFreeCommandBuffers = nullptr;
+PFN_vkFreeDescriptorSets vkFreeDescriptorSets = nullptr;
+PFN_vkFreeMemory vkFreeMemory = nullptr;
+
+#ifdef VK_USE_PLATFORM_ANDROID_ANDROID
+    PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROID = nullptr;
+#endif
+
+PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements = nullptr;
+PFN_vkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2 = nullptr;
+PFN_vkGetBufferMemoryRequirements2KHR vkGetBufferMemoryRequirements2KHR = nullptr;
+PFN_vkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupport = nullptr;
+PFN_vkGetDescriptorSetLayoutSupportKHR vkGetDescriptorSetLayoutSupportKHR = nullptr;
+PFN_vkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeatures = nullptr;
+PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR vkGetDeviceGroupPeerMemoryFeaturesKHR = nullptr;
+PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR = nullptr;
+PFN_vkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHR = nullptr;
+PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment = nullptr;
+PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr = nullptr;
+PFN_vkGetDeviceQueue vkGetDeviceQueue = nullptr;
+PFN_vkGetDeviceQueue2 vkGetDeviceQueue2 = nullptr;
+PFN_vkGetDisplayModeProperties2KHR vkGetDisplayModeProperties2KHR = nullptr;
+PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR = nullptr;
+PFN_vkGetDisplayPlaneCapabilities2KHR vkGetDisplayPlaneCapabilities2KHR = nullptr;
+PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR = nullptr;
+PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR = nullptr;
+PFN_vkGetEventStatus vkGetEventStatus = nullptr;
+PFN_vkGetFenceFdKHR vkGetFenceFdKHR = nullptr;
+PFN_vkGetFenceStatus vkGetFenceStatus = nullptr;
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHR = nullptr;
+#endif
+
+PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements = nullptr;
+PFN_vkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2 = nullptr;
+PFN_vkGetImageMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR = nullptr;
+PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements = nullptr;
+PFN_vkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2 = nullptr;
+PFN_vkGetImageSparseMemoryRequirements2KHR vkGetImageSparseMemoryRequirements2KHR = nullptr;
+PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout = nullptr;
+
+#ifdef VK_USE_PLATFORM_ANDROID_ANDROID
+    PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
+#endif
+
+PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR = nullptr;
+PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR = nullptr;
+PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT = nullptr;
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkGetMemoryWin32HandleKHR vkGetMemoryWin32HandleKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_NV
+    PFN_vkGetMemoryWin32HandleNV vkGetMemoryWin32HandleNV = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkGetMemoryWin32HandlePropertiesKHR vkGetMemoryWin32HandlePropertiesKHR = nullptr;
+#endif
+
+PFN_vkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLE = nullptr;
+PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR vkGetPhysicalDeviceDisplayPlaneProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR = nullptr;
+PFN_vkGetPhysicalDeviceDisplayProperties2KHR vkGetPhysicalDeviceDisplayProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR = nullptr;
+PFN_vkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferProperties = nullptr;
+PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR vkGetPhysicalDeviceExternalBufferPropertiesKHR = nullptr;
+PFN_vkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFenceProperties = nullptr;
+PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR vkGetPhysicalDeviceExternalFencePropertiesKHR = nullptr;
+PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV vkGetPhysicalDeviceExternalImageFormatPropertiesNV = nullptr;
+PFN_vkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphoreProperties = nullptr;
+PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = nullptr;
+PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures = nullptr;
+PFN_vkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2 = nullptr;
+PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR = nullptr;
+PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties = nullptr;
+PFN_vkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2 = nullptr;
+PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX = nullptr;
+PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties = nullptr;
+PFN_vkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2 = nullptr;
+PFN_vkGetPhysicalDeviceImageFormatProperties2KHR vkGetPhysicalDeviceImageFormatProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties = nullptr;
+PFN_vkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2 = nullptr;
+PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR = nullptr;
+
+#ifdef VK_USE_PLATFORM_MIR_KHR
+    PFN_vkGetPhysicalDeviceMirPresentationSupportKHR vkGetPhysicalDeviceMirPresentationSupportKHR = nullptr;
+#endif
+
+PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT vkGetPhysicalDeviceMultisamplePropertiesEXT = nullptr;
+PFN_vkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHR = nullptr;
+PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties = nullptr;
+PFN_vkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2 = nullptr;
+PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties = nullptr;
+PFN_vkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2 = nullptr;
+PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatProperties = nullptr;
+PFN_vkGetPhysicalDeviceSparseImageFormatProperties2 vkGetPhysicalDeviceSparseImageFormatProperties2 = nullptr;
+PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR vkGetPhysicalDeviceSparseImageFormatProperties2KHR = nullptr;
+PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXT = nullptr;
+PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHR = nullptr;
+PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR = nullptr;
+PFN_vkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHR = nullptr;
+PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR = nullptr;
+PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR = nullptr;
+PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
+
+#ifdef VK_USE_PLATFORM_WAYLAND_KHR
+    PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_XCB_KHR
+    PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHR = nullptr;
+#endif
+
+#ifdef VK_USE_PLATFORM_XLIB_KHR
+    PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR vkGetPhysicalDeviceXlibPresentationSupportKHR = nullptr;
+#endif
+
+PFN_vkGetPipelineCacheData vkGetPipelineCacheData = nullptr;
+PFN_vkGetQueryPoolResults vkGetQueryPoolResults = nullptr;
+
+#ifdef VK_USE_PLATFORM_XLIB_XRANDR_NV
+    PFN_vkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXT = nullptr;
+#endif
+
+PFN_vkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLE = nullptr;
+PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity = nullptr;
+PFN_vkGetSemaphoreFdKHR vkGetSemaphoreFdKHR = nullptr;
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHR = nullptr;
+#endif
+
+PFN_vkGetShaderInfoAMD vkGetShaderInfoAMD = nullptr;
+PFN_vkGetSwapchainCounterEXT vkGetSwapchainCounterEXT = nullptr;
+PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR = nullptr;
+PFN_vkGetSwapchainStatusKHR vkGetSwapchainStatusKHR = nullptr;
+PFN_vkGetValidationCacheDataEXT vkGetValidationCacheDataEXT = nullptr;
+PFN_vkImportFenceFdKHR vkImportFenceFdKHR = nullptr;
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHR = nullptr;
+#endif
+
+PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR = nullptr;
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+    PFN_vkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHR = nullptr;
+#endif
+
+PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges = nullptr;
+PFN_vkMapMemory vkMapMemory = nullptr;
+PFN_vkMergePipelineCaches vkMergePipelineCaches = nullptr;
+PFN_vkMergeValidationCachesEXT vkMergeValidationCachesEXT = nullptr;
+PFN_vkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXT = nullptr;
+PFN_vkQueueBindSparse vkQueueBindSparse = nullptr;
+PFN_vkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXT = nullptr;
+PFN_vkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXT = nullptr;
+PFN_vkQueuePresentKHR vkQueuePresentKHR = nullptr;
+PFN_vkQueueSubmit vkQueueSubmit = nullptr;
+PFN_vkQueueWaitIdle vkQueueWaitIdle = nullptr;
+PFN_vkRegisterDeviceEventEXT vkRegisterDeviceEventEXT = nullptr;
+PFN_vkRegisterDisplayEventEXT vkRegisterDisplayEventEXT = nullptr;
+PFN_vkRegisterObjectsNVX vkRegisterObjectsNVX = nullptr;
+PFN_vkReleaseDisplayEXT vkReleaseDisplayEXT = nullptr;
+PFN_vkResetCommandBuffer vkResetCommandBuffer = nullptr;
+PFN_vkResetCommandPool vkResetCommandPool = nullptr;
+PFN_vkResetDescriptorPool vkResetDescriptorPool = nullptr;
+PFN_vkResetEvent vkResetEvent = nullptr;
+PFN_vkResetFences vkResetFences = nullptr;
+PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT = nullptr;
+PFN_vkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXT = nullptr;
+PFN_vkSetEvent vkSetEvent = nullptr;
+PFN_vkSetHdrMetadataEXT vkSetHdrMetadataEXT = nullptr;
+PFN_vkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXT = nullptr;
+PFN_vkTrimCommandPool vkTrimCommandPool = nullptr;
+PFN_vkTrimCommandPoolKHR vkTrimCommandPoolKHR = nullptr;
+PFN_vkUnmapMemory vkUnmapMemory = nullptr;
+PFN_vkUnregisterObjectsNVX vkUnregisterObjectsNVX = nullptr;
+PFN_vkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplate = nullptr;
+PFN_vkUpdateDescriptorSetWithTemplateKHR vkUpdateDescriptorSetWithTemplateKHR = nullptr;
+PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets = nullptr;
+PFN_vkWaitForFences vkWaitForFences = nullptr;

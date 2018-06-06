@@ -1,5 +1,5 @@
 #include "Vulkan.hpp"
-#include "Loader.hpp"
+#include "VulkanManager.hpp"
 #include "../../Log.hpp"
 
 Animus::Backend *create_backend(void) {
@@ -21,34 +21,11 @@ namespace Vulkan {
     }
 
     void Backend::init(void) {
-        VkResult res;
-        VkInstance instance;
-        VkInstanceCreateInfo instanceInfo;
-        uint32_t version;
-
-        Loader::init();
-        Loader::getSingleton().loadBaseFunctions();
-
-        instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-        instanceInfo.pNext = nullptr;
-        instanceInfo.flags = 0;
-        instanceInfo.pApplicationInfo = nullptr;
-        instanceInfo.enabledLayerCount = 0;
-        instanceInfo.ppEnabledLayerNames = nullptr;
-        instanceInfo.enabledExtensionCount = 0;
-        instanceInfo.ppEnabledExtensionNames = nullptr;
-
-        res = vkCreateInstance(&instanceInfo, nullptr, &instance);
-        if(res != VK_SUCCESS) {
-            Log::getSingleton().fatalStr("Failed to create instance");
-        }
-
-        vkEnumerateInstanceVersion(&version);
-        Log::getSingleton().log("Got version %", convertVersion(version));
+        VulkanManager::init();
     }
 
     void Backend::deinit(void) {
-        Loader::deinit();
+        VulkanManager::deinit();
     }
 
     const UnsafeVector<GraphicsInterfaceInfo>& Backend::getGraphicsInterfaces(void) {
