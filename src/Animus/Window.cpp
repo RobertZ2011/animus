@@ -53,7 +53,7 @@ namespace Animus {
             return nullptr;
         }
 
-        switch(type.get()) {
+        switch(type.value()) {
             case Window_::WMType::Windows:
                 #ifdef SDL_VIDEO_DRIVER_WINDOWS
                 return reinterpret_cast<void*>(info.info.win.hwnd);

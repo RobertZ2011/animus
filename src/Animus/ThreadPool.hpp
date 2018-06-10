@@ -5,12 +5,14 @@
 #include "Singleton.hpp"
 #include "Queue.hpp"
 #include "Vector.hpp"
-#include "Future.hpp"
 #include "macros.hpp"
 
 #include <thread>
 
 namespace Animus {
+    template<typename T>
+    class Future;
+
     REQUIRES_STD
     typedef std::thread Thread;
 
@@ -27,13 +29,6 @@ namespace Animus {
 
         void threadLoop(void);
         void queueWork(Queue<WorkItem>& queue);
-
-        REQUIRES_STD
-        static void sleep(unsigned int ms);
-
-        REQUIRES_STD
-        static void yield(void);
-
     public:
         enum class Priority {
             Low = 2,
@@ -89,6 +84,12 @@ namespace Animus {
 
         static void init(void);
         static void deinit(void);
+
+        REQUIRES_STD
+        static void yield(void);
+
+        REQUIRES_STD
+        static void sleep(unsigned int ms);
 
     private:
         struct WorkItem {

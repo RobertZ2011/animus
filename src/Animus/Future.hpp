@@ -2,19 +2,19 @@
 #define ANIMUS_FUTURE
 
 #include "types.hpp"
-#include "Optional.hpp"
-#include "AtomicObject.hpp"
+#include "macros.hpp"
+#include "ThreadPool.hpp"
 
 namespace Animus {
+
     template<typename T>
-    class Future : public AtomicObject {
+    class Future {
         struct FutureData {
             Optional<T> value;
             Optional<Exception> exception;
         };
 
         Pointer<FutureData> data;
-    private:
 
     public:
         Future(void) {
@@ -25,9 +25,7 @@ namespace Animus {
             this->data = future.data;
         }
 
-        ~Future(void) {
-
-        }
+        ~Future(void) = default;
 
         Future& operator=(const Future& future) {
             this->data = future.data;
@@ -35,37 +33,55 @@ namespace Animus {
         }
 
         void setValue(const T& value) {
-            Lock lock(this);
             this->data->value = value;
         }
 
         void setException(const Exception& exception) {
-            Lock lock(this);
             this->data->exception = exception;
         }
 
         T get(void) {
             this->wait();
 
-            Lock lock(this);
-            if(this->data->value.isSome()) {
-                return this->data->value.get();
+            if(this->data->value.has_value()) {
+                return this->data->value.value();
             }
             else {
-                throw this->data->exception.get();
+                throw this->data->exception.value();
             }
         }
 
         bool hasValue(void) {
-            Lock lock(this);
-            return this->data->value.isSome() || this->data->exception.isSome();
+            return this->data->value.has_value() || this->data->exception.has_value();
         }
 
         void wait(void) {
             while(!this->hasValue()) {
-                //TODO: yield;
+                ThreadPool::yield();
             }
         }
+    };
+
+    template<>
+    class Future<void>  {
+        struct FutureData {
+            bool complete = false;
+            Optional<Exception> exception;
+        };
+
+        Pointer<FutureData> data;
+
+    public:
+        Future(void);
+        Future(const Future& future);
+        ~Future(void) = default;
+
+        Future& operator=(const Future& future);
+        void setException(const Exception& exception);
+        void setValue(void);
+        void get(void);
+        bool hasValue(void);
+        void wait(void);
     };
 }
 #endif

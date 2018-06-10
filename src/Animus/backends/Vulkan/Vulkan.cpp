@@ -10,8 +10,7 @@ void destroy_backend(Animus::Backend *backend) {
     delete backend;
 }
 
-namespace Animus{
-namespace Vulkan {
+namespace Animus::Vulkan {
     String Backend::getName(void) {
         return "Vulkan";
     }
@@ -21,10 +20,12 @@ namespace Vulkan {
     }
 
     void Backend::init(void) {
+        Log::getSingleton().logStr("Vulkan Init");
         VulkanManager::init();
     }
 
     void Backend::deinit(void) {
+        Log::getSingleton().logStr("Vulkan deinit");
         VulkanManager::deinit();
     }
 
@@ -43,13 +44,4 @@ namespace Vulkan {
     ComputeInterface Backend::createComputeInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) {
         return ComputeInterface(nullptr);
     }
-
-    Version convertVersion(uint32_t version) {
-        uint32_t major = (version >> 22) & 0x3FF;
-        uint32_t minor = (version >> 12) & 0x3FF;
-        uint32_t patch = version & 0xFFF;
-
-        return Version(major, minor, patch);
-    }
-}
 }

@@ -2,7 +2,7 @@
 #define ANIMUS_QUEUE
 
 #include "AtomicObject.hpp"
-#include "Optional.hpp"
+#include "types.hpp"
 #include "macros.hpp"
 
 #include <queue>

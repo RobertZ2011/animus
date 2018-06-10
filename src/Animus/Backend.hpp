@@ -8,7 +8,7 @@
 #include "SharedObject.hpp"
 #include "GraphicsInterface.hpp"
 #include "ComputeInterface.hpp"
-#include "Optional.hpp"
+#include "types.hpp"
 
 namespace Animus {
     struct ComputeInterfaceInfo {

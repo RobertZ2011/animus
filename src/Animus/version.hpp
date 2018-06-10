@@ -13,6 +13,8 @@ namespace Animus {
     REQUIRES_STD
     bool operator>(const Version& lhs, const Version& rhs);
 
+    bool operator>=(const Version& lhs, const Version& rhs);
+
     REQUIRES_STD
     template<>
     String toString<Version>(Version version);

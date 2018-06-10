@@ -6,7 +6,6 @@
 #include "GraphicsInterface.hpp"
 #include "ComputeInterface.hpp"
 #include "Backend.hpp"
-#include "Optional.hpp"
 
 #include <SDL2/SDL.h>
 

@@ -17,10 +17,21 @@ namespace Animus {
 
         this->running = true;
 
+        //create and start running the threads
         for(int i = 0; i < numThreads; i++) {
             this->threads.push_back(Thread([this] {
                 this->threadLoop();
             }));
+        }
+
+        //give the subordinate threads low priority yield work items to prevent high CPU usage
+        //when there's no work. The main thread should always be busy with at least input processing
+        //and won't need one
+
+        for(int i = 0; i < numThreads; i++) {
+            this->dispatch([]() {
+                ThreadPool::yield();
+            }, ThreadPool::Priority::Low, true);
         }
 
         Log::getSingleton().logStr("ThreadPool initialized");
@@ -62,8 +73,8 @@ namespace Animus {
         for(int j = 0; j < maxItems; j++) {
             Optional<WorkItem> optional = queue.pop_front_optional();
 
-            if(optional.isSome()) {
-                WorkItem work = optional.get();
+            if(optional.has_value()) {
+                WorkItem work = optional.value();
                 work.work();
 
                 //don't requeue an item if the pool has stopped running
@@ -72,6 +83,7 @@ namespace Animus {
                 }
             }
             else {
+                //break if we've run out of work for this priority
                 break;
             }
         }
@@ -104,8 +116,6 @@ namespace Animus {
                     break;
                 }
             }
-
-            ThreadPool::yield();
         }
     }
 

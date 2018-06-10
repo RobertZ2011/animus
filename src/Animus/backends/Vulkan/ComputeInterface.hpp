@@ -3,11 +3,9 @@
 
 #include "VulkanManager.hpp"
 
-namespace Animus {
-namespace Vulkan {
+namespace Animus::Vulkan {
     class ComputeInterface : ::Animus::ComputeInterface_ {
 
     };
-}
 }
 #endif

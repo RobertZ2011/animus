@@ -6,6 +6,7 @@
 #include <tuple>
 #include <exception>
 #include <atomic>
+#include <optional>
 
 #include <glm/glm.hpp>
 
@@ -40,6 +41,10 @@ namespace Animus {
     REQUIRES_STD
     template<typename A, typename B>
     using Pair = std::pair<A, B>;
+
+    REQUIRES_STD
+    template<typename T>
+    using Optional = std::optional<T>;
 
     typedef glm::ivec2 Vec2i;
     typedef glm::vec2 Vec2f;

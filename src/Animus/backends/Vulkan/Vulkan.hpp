@@ -6,8 +6,7 @@
 extern "C" Animus::Backend *create_backend(void);
 extern "C" void destroy_backend(Animus::Backend *backend);
 
-namespace Animus {
-namespace Vulkan {
+namespace Animus::Vulkan {
     class Backend : public ::Animus::Backend {
         UnsafeVector<GraphicsInterfaceInfo> graphicsInfo = {
             GraphicsInterfaceInfo("Vulkan", Version(1, 1, 0))
@@ -33,8 +32,5 @@ namespace Vulkan {
         GraphicsInterface createGraphicsInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) override;
         ComputeInterface createComputeInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) override;
     };
-
-    Version convertVersion(uint32_t version);
-}
 }
 #endif

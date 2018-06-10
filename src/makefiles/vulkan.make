@@ -1,4 +1,4 @@
-FILE_NAMES_VULKAN := functions VulkanManager Vulkan
+FILE_NAMES_VULKAN := functions Error DeviceQueuePool VulkanManager Vulkan
 OBJECT_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/build/vulkan/%.o)
 CPP_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/backends/Vulkan/%.cpp)
 
