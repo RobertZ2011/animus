@@ -14,7 +14,7 @@ public:
             auto window = Window_::create(Vec2i(640, 480), "Test");
             Backend *backend = BackendManager::getSingleton().getDefaultBackend();
 
-            backend->init();
+            backend->init(window);
 
             std::cin.get();
             ThreadPool::getSingleton().shutdown();

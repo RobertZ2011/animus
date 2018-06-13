@@ -21,5 +21,13 @@ namespace Animus::Vulkan {
 
         const char *what(void) const noexcept override;
     };
+
+    class NoQueue : public Exception {
+    public:
+        NoQueue(void) = default;
+        ~NoQueue(void) = default;
+
+        const char *what(void) const noexcept override;
+    };
 }
 #endif

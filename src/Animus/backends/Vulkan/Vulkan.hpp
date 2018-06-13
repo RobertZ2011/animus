@@ -2,6 +2,7 @@
 #define ANIMUS_VULKAN
 
 #include "../../Backend.hpp"
+#include "../../Window.hpp"
 
 extern "C" Animus::Backend *create_backend(void);
 extern "C" void destroy_backend(Animus::Backend *backend);
@@ -23,14 +24,14 @@ namespace Animus::Vulkan {
         String getName(void) override;
         Version getVersion(void) override;
 
-        void init(void) override;
+        void init(const Window& window) override;
         void deinit(void) override;
 
         const UnsafeVector<GraphicsInterfaceInfo>& getGraphicsInterfaces(void) override;
         const UnsafeVector<ComputeInterfaceInfo>& getComputeInterfaces(void) override;
 
-        GraphicsInterface createGraphicsInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) override;
-        ComputeInterface createComputeInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) override;
+        GraphicsInterface createGraphicsInterface(const String& name, Optional<Version> version) override;
+        ComputeInterface createComputeInterface(const String& name, Optional<Version> version) override;
     };
 }
 #endif

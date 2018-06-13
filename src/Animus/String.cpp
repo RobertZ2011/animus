@@ -9,6 +9,16 @@ namespace Animus {
     }
 
     template<>
+    String toString<char*>(char *str) {
+        return String(str);
+    }
+
+    template<>
+    String toString<const char*>(const char *str) {
+        return String(str);
+    }
+
+    template<>
     String toString<unsigned int>(unsigned int value) {
         std::stringstream s;
 

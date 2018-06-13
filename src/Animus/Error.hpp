@@ -51,5 +51,14 @@ namespace Animus {
 
         const char *what(void) const noexcept override;
     };
+
+    class RuntimeError : public Exception {
+        String message;
+    public:
+        RuntimeError(const String& str);
+        ~RuntimeError(void) = default;
+
+        const char *what(void) const noexcept override;
+    };
 }
 #endif

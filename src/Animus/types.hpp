@@ -7,6 +7,7 @@
 #include <exception>
 #include <atomic>
 #include <optional>
+#include <unordered_map>
 
 #include <glm/glm.hpp>
 
@@ -33,6 +34,10 @@ namespace Animus {
 
     REQUIRES_STD
     typedef std::exception Exception;
+
+    REQUIRES_STD
+    template<typename K, typename V>
+    using UnorderedMap = std::unordered_map<K, V>;
 
     REQUIRES_STD
     template<typename T>

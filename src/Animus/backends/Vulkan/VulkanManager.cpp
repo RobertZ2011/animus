@@ -11,7 +11,7 @@ namespace Animus::Vulkan {
         return Version(major, minor, patch);
     }
 
-    VulkanManager::VulkanManager(void) {
+    VulkanManager::VulkanManager(const NativeWindow& nativeWindow) {
         UnsafeVector<const char*> layers;
         UnsafeVector<const char*> extensions;
 
@@ -36,7 +36,7 @@ namespace Animus::Vulkan {
             }
         #endif
 
-        extensions = this->getPlatformExtensions();
+        extensions = this->getInstanceExtensions();
 
         info.enabledLayerCount = layers.size();
         info.ppEnabledLayerNames = &layers[0];
@@ -45,16 +45,29 @@ namespace Animus::Vulkan {
         info.ppEnabledExtensionNames = &extensions[0];
 
         this->instance = vk::createInstance(info);
-        this->instanceDispatch = vk::DispatchLoaderDynamic(this->instance);
+        this->dispatch = vk::DispatchLoaderDynamic(this->instance);
 
         //it's not likely that we're going to need this info any more, free up some memory
         this->instanceLayers.clear();
         this->instanceExtensions.clear();
 
+        this->createSurface(nativeWindow);
         this->createDevice();
     }
 
     VulkanManager::~VulkanManager(void) {
+        if(this->graphicsDevice) {
+            delete this->graphicsDevice;
+        }
+
+        if(this->computeDevice) {
+            delete this->computeDevice;
+        }
+
+        if(this->sharedDevice) {
+            delete this->sharedDevice;
+        }
+
         //Clear this pointer so that the sharedobject will release
         vkGetInstanceProcAddr.destroy();
     }
@@ -75,10 +88,10 @@ namespace Animus::Vulkan {
         Optional<uint32_t> maxDeviceScore;
 
         if(this->getVersion() >= Version(1, 1, 0)) {
-            physicalDeviceGroups = this->instance.enumeratePhysicalDeviceGroups(this->instanceDispatch);
+            physicalDeviceGroups = this->instance.enumeratePhysicalDeviceGroups(this->dispatch);
         }
 
-        physicalDevices = this->instance.enumeratePhysicalDevices(this->instanceDispatch);
+        physicalDevices = this->instance.enumeratePhysicalDevices(this->dispatch);
 
         //find the device group with the highest score
         if(physicalDeviceGroups.size() > 0) {
@@ -108,13 +121,13 @@ namespace Animus::Vulkan {
         }
 
         //a single device winning out is rare, but could happen
-        /*if(maxDeviceScore > maxGroupScore) {
+        if(maxDeviceScore > maxGroupScore) {
             if(deviceIndex.has_value()) {
-                this->createSingleDevice(physicalDevices[deviceIndex.value()]);
+                this->createDevicePool(physicalDevices[deviceIndex.value()]);
             }
             else {
                 if(groupIndex.has_value()) {
-                    this->createGroupDevice(physicalDeviceGroups[groupIndex.value()])
+                    this->createDevicePool(physicalDeviceGroups[groupIndex.value()]);
                 }
                 else {
                     Log::getSingleton().errorStr("Failed to create device");
@@ -125,11 +138,11 @@ namespace Animus::Vulkan {
         if(maxDeviceScore == maxGroupScore) {
             //prefer a group if we have it
             if(groupIndex.has_value()) {
-                this->createGroupDevice(physicalDeviceGroups[groupIndex.has_value()]);
+                this->createDevicePool(physicalDeviceGroups[groupIndex.value()]);
             }
             else {
                 if(deviceIndex.has_value()) {
-                    this->createSingleDevice(physicalDevices[deviceIndex.has_value()]);
+                    this->createDevicePool(physicalDevices[deviceIndex.value()]);
                 }
                 else {
                     Log::getSingleton().errorStr("Failed to find device");
@@ -138,22 +151,22 @@ namespace Animus::Vulkan {
         }
         else {
             if(deviceIndex.has_value()) {
-                this->createSingleDevice(physicalDevices[deviceIndex.value()]);
+                this->createDevicePool(physicalDevices[deviceIndex.value()]);
             }
             else {
                 if(groupIndex.has_value()) {
-                    this->createGroupDevice(physicalDeviceGroups[groupIndex.value()])
+                    this->createDevicePool(physicalDeviceGroups[groupIndex.value()]);
                 }
                 else {
                     Log::getSingleton().errorStr("Failed to create device");
                 }
             }
-        }*/
+        }
     }
 
     uint32_t VulkanManager::calculateDeviceScore(const vk::PhysicalDevice& device) {
-        auto properties = device.getProperties(this->instanceDispatch);
-        auto queueProps = device.getQueueFamilyProperties(this->instanceDispatch);
+        auto properties = device.getProperties(this->dispatch);
+        auto queueProps = device.getQueueFamilyProperties(this->dispatch);
         vk::QueueFlags gtcBits = vk::QueueFlagBits::eCompute | vk::QueueFlagBits::eGraphics | vk::QueueFlagBits::eTransfer;
         vk::QueueFlags gtBits = vk::QueueFlagBits::eGraphics | vk::QueueFlagBits::eTransfer;
         vk::QueueFlags ctBits = vk::QueueFlagBits::eCompute | vk::QueueFlagBits::eTransfer;
@@ -222,16 +235,34 @@ namespace Animus::Vulkan {
         return sum;
     }
 
-    void VulkanManager::init(void) {
-        VulkanManager::initSingleton(new VulkanManager());
+    void VulkanManager::createDevicePool(const vk::PhysicalDevice& device) {
+        this->sharedDevice = new SharedDeviceQueuePool(device, this);
+    }
+
+    void VulkanManager::createDevicePool(const vk::PhysicalDeviceGroupProperties& deviceGroup) {
+        Log::getSingleton().log("Using device group with % devices", deviceGroup.physicalDeviceCount);
+        for(uint32_t i = 0; i < deviceGroup.physicalDeviceCount; i++) {
+            auto prop = deviceGroup.physicalDevices[i].getProperties(this->dispatch);
+            Log::getSingleton().log("\t%", prop.deviceName);
+        }
+
+        this->sharedDevice = new SharedDeviceQueuePool(deviceGroup, this);
+    }
+
+    void VulkanManager::init(const NativeWindow& nativeWindow) {
+        VulkanManager::initSingleton(new VulkanManager(nativeWindow));
     }
 
     void VulkanManager::deinit(void) {
         VulkanManager::deinitSingleton();
     }
 
-    vk::Instance VulkanManager::getInstance(void) {
+    vk::Instance& VulkanManager::getInstance(void) {
         return this->instance;
+    }
+
+    vk::DispatchLoaderDynamic& VulkanManager::getDispatch(void) {
+        return this->dispatch;
     }
 
     bool VulkanManager::hasLayer(const String& layer) {
@@ -262,13 +293,21 @@ namespace Animus::Vulkan {
         return false;
     }
 
-    Version getVersion(void) {
-        return convertVersion(vk::enumerateInstanceVersion());
+    bool VulkanManager::hasExtension(const vk::PhysicalDevice& device, const String& str) {
+        auto extensionInfo = device.enumerateDeviceExtensionProperties(nullptr, this->dispatch);
+
+        for(auto& extension: extensionInfo) {
+            if(str == extension.extensionName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    #ifdef _WIN32
-    #include "platform/windows/VulkanManager.cpp"
-    #elif defined(__linux__)
-    #include "platform/linux/VulkanManager.cpp"
-    #endif
+    Version VulkanManager::getVersion(void) {
+        return convertVersion(vk::enumerateInstanceVersion());
+    }
 }
+
+#include "platform/VulkanManager.cpp"

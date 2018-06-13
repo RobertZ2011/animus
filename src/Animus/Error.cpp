@@ -34,4 +34,12 @@ namespace Animus {
     const char *FileNotOpen::what(void) const noexcept {
         return "Filesystem object not open";
     }
+
+    RuntimeError::RuntimeError(const String& str) {
+        this->message = str;
+    }
+
+    const char *RuntimeError::what(void) const noexcept {
+        return this->message.c_str();
+    }
 }

@@ -6,6 +6,7 @@
 #include "GraphicsInterface.hpp"
 #include "ComputeInterface.hpp"
 #include "Backend.hpp"
+#include "platform/Window.hpp"
 
 #include <SDL2/SDL.h>
 
@@ -39,13 +40,16 @@ namespace Animus {
         void setTitle(const String& title);
 
         REQUIRES_SDL
-        void *getWMPointer(void);
+        NativeWindow getNativeWindow(void);
 
         REQUIRES_SDL
-        Optional<Window_::WMType> getWMType(void);
+        Optional<Window_::WMType> getNativeWindowType(void);
 
         static Window create(const Vec2i& size, const String& title, bool fullscreen = false);
         static Window createFullscreenDesktop(const String& title);
     };
+
+    template<>
+    String toString<Window_::WMType>(Window_::WMType type);
 }
 #endif

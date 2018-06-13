@@ -19,9 +19,9 @@ namespace Animus::Vulkan {
         return Version(0, 0, 1);
     }
 
-    void Backend::init(void) {
+    void Backend::init(const Window& window) {
         Log::getSingleton().logStr("Vulkan Init");
-        VulkanManager::init();
+        VulkanManager::init(window->getNativeWindow());
     }
 
     void Backend::deinit(void) {
@@ -37,11 +37,11 @@ namespace Animus::Vulkan {
         return this->computeInfo;
     }
 
-    GraphicsInterface Backend::createGraphicsInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) {
+    GraphicsInterface Backend::createGraphicsInterface(const String& name, Optional<Version> version) {
         return GraphicsInterface(nullptr);
     }
 
-    ComputeInterface Backend::createComputeInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) {
+    ComputeInterface Backend::createComputeInterface(const String& name, Optional<Version> version) {
         return ComputeInterface(nullptr);
     }
 }

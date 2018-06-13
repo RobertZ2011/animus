@@ -12,7 +12,13 @@ namespace Animus {
     String toString(T);
 
     template<>
-    String toString<String>(String);
+    String toString<String>(String str);
+
+    template<>
+    String toString<char*>(char *str);
+
+    template<>
+    String toString<const char*>(const char *str);
 
     REQUIRES_STD
     template<>

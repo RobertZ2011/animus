@@ -12,4 +12,8 @@ namespace Animus::Vulkan {
     const char *NoSuitableDevice::what(void) const noexcept {
         return "Failed to find suitable device";
     }
+
+    const char *NoQueue::what(void) const noexcept {
+        return "Failed to find suitable queue";
+    }
 }

@@ -1,8 +1,8 @@
-FILE_NAMES_VULKAN := functions Error DeviceQueuePool VulkanManager Vulkan
+FILE_NAMES_VULKAN := functions Error DeviceQueuePool Swapchain SharedDeviceQueuePool VulkanManager Vulkan
 OBJECT_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/build/vulkan/%.o)
 CPP_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/backends/Vulkan/%.cpp)
 
-CPPFLAGS_VULKAN := $(CPPFLAGS) -fPIC
+CPPFLAGS_VULKAN := $(CPPFLAGS) -fPIC -DVK_USE_PLATFORM_XLIB_KHR -DVK_USE_PLATFORM_WAYLAND_KHR
 LDFLAGS_VULKAN := $(LDFLAGS)
 
 .PHONY: build_vulkan
