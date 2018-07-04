@@ -1,4 +1,4 @@
-#include "SharedDeviceQueuePool.hpp"
+#include "SharedDevice.hpp"
 #include "VulkanManager.hpp"
 #include "Error.hpp"
 #include "../../Vector.hpp"
@@ -6,11 +6,11 @@
 #include "../../Log.hpp"
 
 namespace Animus::Vulkan {
-    SharedDeviceQueuePool::SharedDeviceQueuePool(const vk::PhysicalDevice& device, VulkanManager *manager) {
+    SharedDevice::SharedDevice(const vk::PhysicalDevice& device, VulkanManager *manager) {
         this->init(device, manager);
     }
 
-    SharedDeviceQueuePool::SharedDeviceQueuePool(const vk::PhysicalDeviceGroupProperties& deviceGroup, VulkanManager *manager) {
+    SharedDevice::SharedDevice(const vk::PhysicalDeviceGroupProperties& deviceGroup, VulkanManager *manager) {
         vk::DeviceGroupDeviceCreateInfo info;
 
         info.physicalDeviceCount = deviceGroup.physicalDeviceCount;
@@ -20,11 +20,11 @@ namespace Animus::Vulkan {
         this->setupSurfaceFormat();
     }
 
-    SharedDeviceQueuePool::~SharedDeviceQueuePool(void) {
+    SharedDevice::~SharedDevice(void) {
 
     }
 
-    void SharedDeviceQueuePool::init(const vk::PhysicalDevice& physicalDevice, VulkanManager *manager, vk::DeviceGroupDeviceCreateInfo *groupInfo) {
+    void SharedDevice::init(const vk::PhysicalDevice& physicalDevice, VulkanManager *manager, vk::DeviceGroupDeviceCreateInfo *groupInfo) {
         vk::DeviceCreateInfo info;
         UnsafeVector<vk::DeviceQueueCreateInfo> queueInfo;
         UnorderedMap<uint32_t, uint32_t> queueUsage;
@@ -87,7 +87,7 @@ namespace Animus::Vulkan {
                     //use up the rest
                     queueUsage[i] = prop.queueCount;
 
-                    if(transferQueueCount > SharedDeviceQueuePool::MAX_TRANSFER_QUEUES) {
+                    if(transferQueueCount > SharedDevice::MAX_TRANSFER_QUEUES) {
                         break;
                     }
                 }

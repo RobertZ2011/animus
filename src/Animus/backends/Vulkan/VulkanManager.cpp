@@ -51,7 +51,7 @@ namespace Animus::Vulkan {
         this->instanceLayers.clear();
         this->instanceExtensions.clear();
 
-        this->createSurface(nativeWindow);
+        this->wmInterface = new WMInterface(nativeWindow, this->dispatch);
         this->createDevice();
     }
 
@@ -236,7 +236,7 @@ namespace Animus::Vulkan {
     }
 
     void VulkanManager::createDevicePool(const vk::PhysicalDevice& device) {
-        this->sharedDevice = new SharedDeviceQueuePool(device, this);
+        this->sharedDevice = new SharedDevice(device, this);
     }
 
     void VulkanManager::createDevicePool(const vk::PhysicalDeviceGroupProperties& deviceGroup) {
@@ -246,7 +246,7 @@ namespace Animus::Vulkan {
             Log::getSingleton().log("\t%", prop.deviceName);
         }
 
-        this->sharedDevice = new SharedDeviceQueuePool(deviceGroup, this);
+        this->sharedDevice = new SharedDevice(deviceGroup, this);
     }
 
     void VulkanManager::init(const NativeWindow& nativeWindow) {

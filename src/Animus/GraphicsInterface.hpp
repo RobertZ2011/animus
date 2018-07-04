@@ -13,8 +13,10 @@ namespace Animus {
         virtual String getName(void) = 0;
         virtual Version getVersion(void) = 0;
 
-        virtual void setBuffering(uint32_t count) = 0;
-        virtual void enableVsync(bool enabled) = 0;
+        virtual void resize(const Vec2i& size) = 0;
+        virtual void enableVsync(bool enable) = 0;
+        virtual void setBuffering(uint32_t images) = 0;
+        virtual void setDisplayProperties(const Vec2i& size, bool vsync, uint32_t buffering) = 0;
         virtual void present(void) = 0;
     };
 }

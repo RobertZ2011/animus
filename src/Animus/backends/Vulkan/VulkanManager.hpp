@@ -14,7 +14,8 @@
 #include "../../Window.hpp"
 
 #include "DeviceQueuePool.hpp"
-#include "SharedDeviceQueuePool.hpp"
+#include "SharedDevice.hpp"
+#include "WMInterface.hpp"
 
 namespace Animus::Vulkan {
         Version convertVersion(uint32_t version);
@@ -22,12 +23,12 @@ namespace Animus::Vulkan {
     class VulkanManager : public Singleton<VulkanManager> {
         SharedObject so;
         vk::Instance instance;
-        vk::SurfaceKHR surface;
+        WMInterface *wmInterface;
 
         DeviceQueuePool *computeDevice = nullptr;
         DeviceQueuePool *graphicsDevice = nullptr;
 
-        SharedDeviceQueuePool *sharedDevice = nullptr;
+        SharedDevice *sharedDevice = nullptr;
 
         vk::DispatchLoaderDynamic dispatch;
 
@@ -52,8 +53,6 @@ namespace Animus::Vulkan {
 
         vk::Instance& getInstance(void);
         vk::DispatchLoaderDynamic& getDispatch(void);
-
-        void createSurface(const NativeWindow& nativeWindow);
 
         bool hasLayer(const String& layer);
         bool hasExtension(const String& extension);

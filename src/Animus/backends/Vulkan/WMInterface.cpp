@@ -1,8 +1,21 @@
-#include "Swapchain.hpp"
+#include "WMInterface.hpp"
 
 namespace Animus::Vulkan {
-    Swapchain::Swapchain(const vk::SurfaceKHR& surface, const vk::PhysicalDevice& physicalDevice, const vk::Device& device, uint32_t queueFamily) {
-        auto formats = physicalDevice.getPhysicalDeviceSurfaceFormatsKHR(this->surface, nullptr, this->dispatch);
+    WMInterface::WMInterface(const NativeWindow& nativeWindow, const vk::DispatchLoaderDynamic& dispatch) {
+        this->dispatch = dispatch;
+        this->createSurface(nativeWindow);
+    }
+
+    WMInterface::~WMInterface(void) {
+
+    }
+
+    bool wmInterface::isDeviceSupported(const vk::PhysicalDevice& physicalDevice, uint32_t queueFamily) {
+        return physicalDevice.getPhysicalDeviceSurfaceSupportKHR(queueFamily, this->surface, nullptr, this->dispatch);
+    }
+
+    void WMInterface::selectDevice(const vk::PhysicalDevice& physicalDevice, const vk::Device& device, uint32_t queueFamily) {
+        UnsafeVector<vk::SurfaceFormatKHR> formats physicalDevice.getPhysicalDeviceSurfaceFormatsKHR(this->surface, nullptr, this->dispatch);
         this->presentModes = physicalDevice.getPhysicalDeviceSurfacePresentModesKHR(nullptr, this->dispatch);
 
         if(formats.size()) {
@@ -17,12 +30,8 @@ namespace Animus::Vulkan {
         this->queueFamily = queueFamily;
     }
 
-    Swapchain::~Swapchain(void) {
-
-    }
-
-    void Swapchain::create(bool vsync, uint32_t images, const Vec2i& size, bool threeD) {
-        vk::SwapchainCreateInfoKHR info;
+    void WMInterface::create(bool vsync, uint32_t images, const Vec2i& size) {
+        vk::WMInterfaceCreateInfoKHR info;
         vk::PresentModeKHR presentMode;
 
         if(!vsync) {
@@ -41,16 +50,18 @@ namespace Animus::Vulkan {
         info.pQueueFamilyIndices = &this->queueFamily;
         info.preTransform = vk::SurfaceTransformFlagBitsKHR::eInherit;
         info.compositeAlpha = vk::CompositeAlphaFlagBitsKHR::eInherit;
-        info.presentMode = ;
-        info.clipped = true;
+        info.presentMode = presentMode;
+        info.clipped = false;
         if(this->swapchain.has_value()) {
-            info.oldSwapchain = this->swapchain.value()
+            info.oldWMInterface = this->swapchain.value()
         }
 
-        this->swapchain = device.createSwapchainKHR(info, nullptr, this->dispatch);
+        this->swapchain = device.createWMInterfaceKHR(info, nullptr, this->dispatch);
     }
 
-    void Swapchain::present(void) {
+    void WMInterface::present(void) {
 
     }
 }
+
+#include "platform/WMInterface.cpp"
