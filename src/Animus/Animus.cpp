@@ -16,8 +16,4 @@ namespace Animus {
         SDL_Quit();
         Log::deinit();
     }
-
-    Version getVersion(void) {
-        return Version(0, 0, 1);
-    }
 }

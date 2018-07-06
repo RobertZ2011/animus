@@ -13,6 +13,14 @@ namespace Animus::Vulkan {
         return "Failed to find suitable device";
     }
 
+    NoSurface::NoSurface(const String& reason) {
+        this->reason = reason;
+    }
+
+    const char *NoSurface::what(void) const noexcept {
+        return this->reason.c_str();
+    }
+
     const char *NoQueue::what(void) const noexcept {
         return "Failed to find suitable queue";
     }

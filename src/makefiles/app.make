@@ -15,7 +15,7 @@ clean_app:
 build_app:
 	-mkdir app/build
 
-app/build/libapp.so: build_app $(CPP_FILES_APP) $(OBJECT_FILES_APP)
+app/build/libapp.so: Animus/build/libanimus.so build_app $(CPP_FILES_APP) $(OBJECT_FILES_APP)
 	$(CPP) -shared $(LDFLAGS_APP) -o app/build/libapp.so $(OBJECT_FILES_APP)
 
 app/build/%.o: app/%.cpp

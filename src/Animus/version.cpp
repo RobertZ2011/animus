@@ -62,4 +62,8 @@ namespace Animus {
         stream << std::get<0>(version) << '.' << std::get<1>(version) << '.' << std::get<2>(version);
         return stream.str();
     }
+
+    Version getVersion(void) {
+        return Version(0, 0, 1);
+    }
 }

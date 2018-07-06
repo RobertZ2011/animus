@@ -21,7 +21,6 @@ namespace Animus {
     void init(void);
     void deinit(void);
 
-    Version getVersion(void);
     FilePath getEngineBase(void);
 }
 #endif

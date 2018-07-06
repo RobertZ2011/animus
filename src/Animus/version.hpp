@@ -18,5 +18,7 @@ namespace Animus {
     REQUIRES_STD
     template<>
     String toString<Version>(Version version);
+
+    Version getVersion(void);
 }
 #endif

@@ -14,6 +14,15 @@ namespace Animus::Vulkan {
         const char *what(void) const noexcept override;
     };
 
+    class NoSurface : public Exception {
+        String reason;
+    public:
+        NoSurface(const String& reason);
+        ~NoSurface(void) = default;
+
+        const char *what(void) const noexcept override;
+    };
+
     class NoSuitableDevice : public Exception {
     public:
         NoSuitableDevice(void) = default;
