@@ -3,13 +3,13 @@
 
 #include "Singleton.hpp"
 #include "File.hpp"
-#include "AtomicObject.hpp"
-#include "types.hpp"
+#include "Object.hpp"
+#include "types/types.hpp"
 #include "System.hpp"
-#include "Vector.hpp"
+#include "types/Vector.hpp"
 
 namespace Animus {
-    class Log : public Singleton<Log>, public AtomicObject {
+    class Log : public Singleton<Log>, public Object {
         File file;
 
         Log(void);
@@ -30,6 +30,17 @@ namespace Animus {
             Warning,
             Error,
             Fatal
+        };
+
+        //wrapper to print numbers as hex
+        template<typename I>
+        struct Hex {
+            I value;
+
+            Hex(I value) {
+                this->value = value;
+            }
+            ~Hex(void) = default;
         };
 
         ~Log(void);
@@ -76,11 +87,15 @@ namespace Animus {
         static void deinit(void);
 
     private:
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         String logRaw(Log::Level level, const String& fmt, const UnsafeVector<String>& args);
     };
 
     template<>
     String toString<Log::Level>(Log::Level level);
+
+    ANIMUS_REQUIRES_STD
+    template<>
+    String toString<Log::Hex<uint32_t>>(Log::Hex<uint32_t>);
 }
 #endif

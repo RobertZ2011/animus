@@ -3,7 +3,7 @@
 
 #include "FilePath.hpp"
 #include "File.hpp"
-#include "Vector.hpp"
+#include "types/Vector.hpp"
 
 namespace Animus {
     class Directory {

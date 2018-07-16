@@ -1,10 +1,10 @@
-#ifndef ANIMUS_GAME_OBJECT
-#define ANIMUS_GAME_OBJECT
+#ifndef ANIMUS_ENTITY
+#define ANIMUS_ENTITY
 
-#include "types.hpp"
+#include "types/types.hpp"
 
 namespace Animus {
-    class GameObject {
+    class Entity {
     protected:
         Vec3f position;
         Vec3f scale;

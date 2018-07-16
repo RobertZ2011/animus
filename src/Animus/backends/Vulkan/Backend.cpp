@@ -3,6 +3,8 @@
 #include "../../version.hpp"
 #include "../../Log.hpp"
 #include "Error.hpp"
+#include "PhysicalDevice.hpp"
+#include "GraphicsDevice.hpp"
 
 namespace Animus::Vulkan {
     String Backend::getName(void) {
@@ -13,37 +15,23 @@ namespace Animus::Vulkan {
         return Version(1, 0, 0);
     }
 
-    void Backend::init(const Pointer<Window_>& window) {
+    void Backend::init(void) {
         auto vulkanObj = SharedObject_::create(this->locateVulkan());
-        vk::ApplicationInfo appInfo(nullptr, 1, "Animus", convertVersion(::Animus::getVersion()), VK_API_VERSION_1_0);
-        vk::InstanceCreateInfo createInfo;
-        UnsafeVector<const char*> layers;
-        UnsafeVector<const char*> extensions = this->getInstanceExtensions();
 
         //These are the only functions we need to load, the dynamic dispatch from vulkan.hpp will handle the rest
         vkGetInstanceProcAddr = vulkanObj->loadFunction<PFN_vkVoidFunction(VkInstance, const char*)>("vkGetInstanceProcAddr");
-        vkCreateInstance = (PFN_vkCreateInstance) vkGetInstanceProcAddr(nullptr, "vkCreateInstance");
-        vkEnumerateInstanceLayerProperties = (PFN_vkEnumerateInstanceLayerProperties) vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceLayerProperties");
-        vkEnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties) vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceExtensionProperties");
-        vkEnumerateInstanceVersion = (PFN_vkEnumerateInstanceVersion) vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion");
+        vkCreateInstance = (PFN_vkCreateInstance) vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkCreateInstance");
+        vkEnumerateInstanceLayerProperties = (PFN_vkEnumerateInstanceLayerProperties) vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceLayerProperties");
+        vkEnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties) vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties");
+        vkEnumerateInstanceVersion = (PFN_vkEnumerateInstanceVersion) vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceVersion");
 
-        createInfo.pApplicationInfo = &appInfo;
-        createInfo.enabledExtensionCount = extensions.size();
-        createInfo.ppEnabledExtensionNames = &extensions[0];
-        createInfo.enabledLayerCount = layers.size();
-        createInfo.ppEnabledLayerNames = &layers[0];
+        this->instance = new Instance();
 
-        this->instance = vk::createInstance(createInfo);
-        Log::getSingleton().log("Created Vulkan instance, version: %", convertVkVersion(vk::enumerateInstanceVersion()));
-
-        this->dispatch = vk::DispatchLoaderDynamic(this->instance);
-        this->createSurface(window);
+        vkGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr) vkGetInstanceProcAddr(this->instance->getInstance(), "vkGetDeviceProcAddr");
     }
 
     void Backend::deinit(void) {
-        if(this->instance) {
-            this->instance.destroy();
-        }
+        delete this->instance;
     }
 
     const UnsafeVector<GraphicsInterfaceInfo>& Backend::getGraphicsInterfaces(void) {
@@ -54,12 +42,31 @@ namespace Animus::Vulkan {
         return this->computeInfo;
     }
 
-    GraphicsInterface Backend::createGraphicsInterface(const String& name, Optional<Version> version) {
-        return Pointer<GraphicsInterface_>(nullptr);
+    GraphicsInterface Backend::createGraphicsInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) {
+        PhysicalDevice device = this->selectDevice();
+        GraphicsDevice *graphics = new GraphicsDevice(*this->instance, device, window, true, 2);
+        this->graphics = GraphicsInterface((GraphicsInterface_*) graphics);
+
+        return this->graphics;
     }
 
     ComputeInterface Backend::createComputeInterface(const String& name, Optional<Version> version) {
-        return Pointer<ComputeInterface_>(nullptr);
+        return this->compute;
+    }
+
+    PhysicalDevice Backend::selectDevice(void) {
+        auto devices = this->instance->enumerateDevices();
+
+        std::sort(devices.begin(), devices.end(), [](PhysicalDevice& a, PhysicalDevice& b) {
+            return a.calculateScore() > b.calculateScore();
+        });
+
+        Log::getSingleton().log("Found % devices", devices.size());
+        for(auto& device: devices) {
+            Log::getSingleton().log("\t% %", device.getName(), device.calculateScore());
+        }
+
+        return devices[0];
     }
 }
 

@@ -1,18 +1,18 @@
 #ifndef ANIMUS_ATOMIC
 #define ANIMUS_ATOMIC
 
-#include "types.hpp"
+#include "types/types.hpp"
 #include <mutex>
 
 namespace Animus {
-    class AtomicObject {
+    class Object {
     private:
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         std::mutex mutex;
 
     public:
-        AtomicObject(void) = default;
-        ~AtomicObject(void) = default;
+        Object(void) = default;
+        ~Object(void) = default;
 
         void lock(void);
         void unlock(void);
@@ -21,10 +21,10 @@ namespace Animus {
 
     class Lock {
     private:
-        AtomicObject *atomic;
+        Object *atomic;
     public:
-        Lock(AtomicObject& atomic);
-        Lock(AtomicObject *atomic);
+        Lock(Object& atomic);
+        Lock(Object *atomic);
         ~Lock();
     };
 }

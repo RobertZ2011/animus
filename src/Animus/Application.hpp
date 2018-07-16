@@ -1,7 +1,7 @@
 #ifndef ANIMUS_APPLICATION
 #define ANIMUS_APPLICATION
 
-#include "types.hpp"
+#include "types/types.hpp"
 
 namespace Animus {
     class Application {

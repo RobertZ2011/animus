@@ -2,12 +2,12 @@
 #define ANIMUS_HEADER
 
 #include "Application.hpp"
-#include "AtomicObject.hpp"
-#include "Queue.hpp"
-#include "Vector.hpp"
+#include "Object.hpp"
+#include "types/Queue.hpp"
+#include "types/Vector.hpp"
 #include "SharedObject.hpp"
 #include "ThreadPool.hpp"
-#include "types.hpp"
+#include "types/types.hpp"
 #include "System.hpp"
 #include "Backend.hpp"
 #include "Window.hpp"

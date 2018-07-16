@@ -67,9 +67,14 @@ namespace Animus {
         this->mainQueue.push(item);
     }
 
-    void ThreadPool::queueWork(Queue<WorkItem>& queue) {
+    bool ThreadPool::queueWork(Queue<WorkItem>& queue) {
         //execute no more than the current number of items in the queue
         int maxItems = queue.size();
+
+        if(maxItems == 0) {
+            return false;
+        }
+
         for(int j = 0; j < maxItems; j++) {
             Optional<WorkItem> optional = queue.pop_front_optional();
 
@@ -87,6 +92,8 @@ namespace Animus {
                 break;
             }
         }
+
+        return true;
     }
 
     void ThreadPool::yield(void) {
@@ -98,9 +105,25 @@ namespace Animus {
     }
 
     void ThreadPool::threadLoop(void) {
+        bool didWork = true;
+        uint16_t backoff = 1;
+
         while(1) {
             for(int i = (int) ThreadPool::Priority::High; i < (int) ThreadPool::Priority::Low; i++) {
-                this->queueWork(this->queues[i]);
+                didWork &= this->queueWork(this->queues[i]);
+            }
+
+            //exponentially backoff, up to roughly one second, if we're not doing any work
+            if(!didWork) {
+                //rotate left
+                uint16_t msb = backoff >> 15;
+                backoff <<= 1;
+                backoff |= msb;
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(backoff / 650));
+            }
+            else {
+                backoff = 1;
             }
 
             if(!this->running) {
@@ -137,6 +160,7 @@ namespace Animus {
                 break;
             }
 
+            //no exponential backoff, just yield to keep the main thread responsive
             ThreadPool::yield();
         }
 

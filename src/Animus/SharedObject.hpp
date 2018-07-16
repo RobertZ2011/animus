@@ -1,7 +1,7 @@
 #ifndef ANIMUS_SHARED_OBJECT
 #define ANIMUS_SHARED_OBJECT
 
-#include "types.hpp"
+#include "types/types.hpp"
 #include "FilePath.hpp"
 
 #include <iostream>

@@ -2,10 +2,10 @@
 #define ANIMUS_STRING
 
 #include <string>
-#include "macros.hpp"
+#include "macros/debug.hpp"
 
 namespace Animus {
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     typedef std::string String;
 
     template<typename T>
@@ -20,19 +20,19 @@ namespace Animus {
     template<>
     String toString<const char*>(const char *str);
 
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     template<>
     String toString<unsigned int>(unsigned int value);
 
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     template<>
     String toString<int>(int value);
 
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     template<>
     String toString<unsigned long>(unsigned long value);
 
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     template<>
     String toString<long>(long value);
 }

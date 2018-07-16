@@ -1,11 +1,11 @@
 #ifndef ANIMUS_THREAD_POOL
 #define ANIMUS_THREAD_POOL
 
-#include "types.hpp"
+#include "types/types.hpp"
 #include "Singleton.hpp"
-#include "Queue.hpp"
-#include "Vector.hpp"
-#include "macros.hpp"
+#include "types/Queue.hpp"
+#include "types/Vector.hpp"
+#include "macros/debug.hpp"
 
 #include <thread>
 
@@ -13,7 +13,7 @@ namespace Animus {
     template<typename T>
     class Future;
 
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     typedef std::thread Thread;
 
     class ThreadPool : public Singleton<ThreadPool> {
@@ -27,8 +27,11 @@ namespace Animus {
 
         ThreadPool(void);
 
+        ANIMUS_REQUIRES_STD
         void threadLoop(void);
-        void queueWork(Queue<WorkItem>& queue);
+
+        //returns true if it did work
+        bool queueWork(Queue<WorkItem>& queue);
     public:
         enum class Priority {
             Low = 2,
@@ -85,10 +88,10 @@ namespace Animus {
         static void init(void);
         static void deinit(void);
 
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         static void yield(void);
 
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         static void sleep(unsigned int ms);
 
     private:

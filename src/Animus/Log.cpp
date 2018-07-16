@@ -104,4 +104,11 @@ namespace Animus {
                 return String("Unknown");
         }
     }
+
+    template<>
+    String toString<Log::Hex<uint32_t>>(Log::Hex<uint32_t> hex) {
+        std::stringstream s;
+        s << std::hex << hex.value;
+        return s.str();
+    }
 }

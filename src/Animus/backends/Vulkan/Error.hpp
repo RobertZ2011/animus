@@ -2,7 +2,7 @@
 #define ANIMUS_VULKAN_ERROR
 
 #include "../../Error.hpp"
-#include "../../types.hpp"
+#include "../../types/types.hpp"
 
 namespace Animus::Vulkan {
     class NoInstanceExtension : public Exception {

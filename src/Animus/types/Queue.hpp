@@ -1,19 +1,19 @@
 #ifndef ANIMUS_QUEUE
 #define ANIMUS_QUEUE
 
-#include "AtomicObject.hpp"
+#include "../Object.hpp"
 #include "types.hpp"
-#include "macros.hpp"
+#include "../macros/debug.hpp"
 
 #include <queue>
 
 namespace Animus {
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     template<typename T>
     using UnsafeQueue = std::queue<T>;
 
     template<typename T>
-    class Queue : public AtomicObject {
+    class Queue : public Object {
     private:
         UnsafeQueue<T> queue;
 

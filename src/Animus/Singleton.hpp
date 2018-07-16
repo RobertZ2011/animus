@@ -1,7 +1,7 @@
 #ifndef ANIMUS_SINGLETON
 #define ANIMUS_SINGLETON
 
-#include "types.hpp"
+#include "types/types.hpp"
 
 namespace Animus {
     template<class T>

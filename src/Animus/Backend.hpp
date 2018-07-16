@@ -1,14 +1,14 @@
 #ifndef ANIMUS_BACKEND
 #define ANIMUS_BACKEND
 
-#include "types.hpp"
+#include "types/types.hpp"
 #include "version.hpp"
-#include "Vector.hpp"
+#include "types/Vector.hpp"
 #include "Singleton.hpp"
 #include "SharedObject.hpp"
 #include "GraphicsInterface.hpp"
 #include "ComputeInterface.hpp"
-#include "types.hpp"
+#include "types/types.hpp"
 
 namespace Animus {
     struct ComputeInterfaceInfo {
@@ -36,14 +36,14 @@ namespace Animus {
         virtual String getName(void) = 0;
         virtual Version getVersion(void) = 0;
 
-        virtual void init(const Pointer<Window_>& window) = 0;
+        virtual void init(void) = 0;
         virtual void deinit(void) = 0;
 
         virtual const UnsafeVector<GraphicsInterfaceInfo>& getGraphicsInterfaces(void) = 0;
         virtual const UnsafeVector<ComputeInterfaceInfo>& getComputeInterfaces(void) = 0;
 
-        virtual GraphicsInterface createGraphicsInterface(const String& name, Optional<Version> version) = 0;
-        virtual ComputeInterface createComputeInterface(const String& name, Optional<Version> version) = 0;
+        virtual GraphicsInterface createGraphicsInterface(const Pointer<Window_>& window, const String& name = "", Optional<Version> version = Optional<Version>()) = 0;
+        virtual ComputeInterface createComputeInterface(const String& name = "", Optional<Version> version = Optional<Version>()) = 0;
     };
 
     typedef Backend *(BackendCreateType)(void);

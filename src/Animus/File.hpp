@@ -7,7 +7,7 @@
 
 namespace Animus {
     class File {
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         std::fstream file;
 
     public:

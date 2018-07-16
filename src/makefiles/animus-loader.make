@@ -15,7 +15,7 @@ clean_animus_loader:
 build_animus_loader:
 	-mkdir animus-loader/build
 
-animus-loader/build/animus-loader: build_animus_loader $(CPP_FILES_ANIMUS_LOADER) $(OBJECT_FILES_ANIMUS_LOADER)
+animus-loader/build/animus-loader: animus build_animus_loader $(CPP_FILES_ANIMUS_LOADER) $(OBJECT_FILES_ANIMUS_LOADER)
 	$(CPP) $(LDFLAGS_ANIMUS_LOADER) -o animus-loader/build/animus-loader $(OBJECT_FILES_ANIMUS_LOADER)
 
 animus-loader/build/%.o: animus-loader/%.cpp

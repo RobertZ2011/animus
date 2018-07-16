@@ -14,7 +14,7 @@ namespace Animus {
     }
 
     BackendManager::BackendManager(void) {
-        TODO("Make this work with different paths")
+        ANIMUS_TODO("Make this work with different paths")
         Directory backendDir = Directory("backends");
         auto backendFiles = backendDir.listChildren();
 

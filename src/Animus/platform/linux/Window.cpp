@@ -1,5 +1,5 @@
 namespace Animus {
-    REQUIRES_SDL
+    ANIMUS_REQUIRES_SDL
     NativeWindow Window_::getNativeWindow(void) {
         Optional<WMType> type = this->getNativeWindowType();
         SDL_SysWMinfo info;

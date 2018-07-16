@@ -70,6 +70,12 @@ namespace Animus {
         }
     }
 
+    Vec2i Window_::getSize(void) {
+        Vec2i size;
+        SDL_GetWindowSize(this->window, &size.x, &size.y);
+        return size;
+    }
+
     Window Window_::create(const Vec2i& size, const String& title, bool fullscreen) {
         Window window(new Window_(size, title, fullscreen));
         window->self = WeakPtr<Window_>(window);

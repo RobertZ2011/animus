@@ -1,8 +1,8 @@
 #ifndef ANIMUS_FUTURE
 #define ANIMUS_FUTURE
 
-#include "types.hpp"
-#include "macros.hpp"
+#include "types/types.hpp"
+#include "macros/debug.hpp"
 #include "ThreadPool.hpp"
 
 namespace Animus {

@@ -1,10 +1,8 @@
 #ifndef ANIMUS_WINDOW
 #define ANIMUS_WINDOW
 
-#include "types.hpp"
-#include "Vector.hpp"
-#include "GraphicsInterface.hpp"
-#include "ComputeInterface.hpp"
+#include "types/types.hpp"
+#include "types/Vector.hpp"
 #include "Backend.hpp"
 #include "platform/Window.hpp"
 
@@ -16,7 +14,7 @@ namespace Animus {
 
     class Window_ {
     private:
-        REQUIRES_SDL
+        ANIMUS_REQUIRES_SDL
         SDL_Window *window;
         WeakPtr<Window_> self;
 
@@ -33,17 +31,20 @@ namespace Animus {
 
         ~Window_();
 
-        REQUIRES_SDL
+        ANIMUS_REQUIRES_SDL
         String getTitle(void);
 
-        REQUIRES_SDL
+        ANIMUS_REQUIRES_SDL
         void setTitle(const String& title);
 
-        REQUIRES_SDL
+        ANIMUS_REQUIRES_SDL
         NativeWindow getNativeWindow(void);
 
-        REQUIRES_SDL
+        ANIMUS_REQUIRES_SDL
         Optional<Window_::WMType> getNativeWindowType(void);
+
+        ANIMUS_REQUIRES_SDL
+        Vec2i getSize(void);
 
         static Window create(const Vec2i& size, const String& title, bool fullscreen = false);
         static Window createFullscreenDesktop(const String& title);

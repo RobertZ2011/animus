@@ -1,4 +1,4 @@
-FILE_NAMES_VULKAN := functions Error deviceScore Backend vulkan
+FILE_NAMES_VULKAN := functions Error Instance PhysicalDevice Device Swapchain GraphicsDevice Backend vulkan
 OBJECT_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/build/vulkan/%.o)
 CPP_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/backends/Vulkan/%.cpp)
 
@@ -7,7 +7,7 @@ LDFLAGS_VULKAN := $(LDFLAGS)
 
 .PHONY: build_vulkan
 
-vulkan: Animus/build/libanimus.so Animus/build/backends/libanimus-vulkan.so
+vulkan: animus Animus/build/backends/libanimus-vulkan.so
 
 build_vulkan:
 	-mkdir -p Animus/build/backends

@@ -1,20 +1,20 @@
 #ifndef ANIMUS_VECTOR
 #define ANIMUS_VECTOR
 
-#include "AtomicObject.hpp"
-#include "macros.hpp"
+#include "../Object.hpp"
+#include "../macros/debug.hpp"
 
 #include <vector>
 #include <initializer_list>
 #include <algorithm>
 
 namespace Animus {
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     template<typename T>
     using UnsafeVector = std::vector<T>;
 
     template<typename T>
-    class Vector : public AtomicObject {
+    class Vector : public Object {
     private:
         UnsafeVector<T> vector;
 
@@ -37,7 +37,7 @@ namespace Animus {
             this->vector = std::move(vec.vector);
         }
 
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         Vector(const std::initializer_list<T>& list) {
             Lock lock(this);
             for(auto v: list) {
@@ -61,7 +61,7 @@ namespace Animus {
             this->vector.push_back(value);
         }
 
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         inline void push_back(T&& value) {
             Lock lock(this);
             this->vector.push_back(std::forward<T>(value));
@@ -77,7 +77,7 @@ namespace Animus {
             return this->vector.size();
         }
 
-        REQUIRES_STD
+        ANIMUS_REQUIRES_STD
         inline void filterInPlace(const Function<bool(const T&)>& func) {
             Lock lock(this);
             this->vector.erase(std::remove_if(this->vector.begin(),

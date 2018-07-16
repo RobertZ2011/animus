@@ -1,24 +1,24 @@
-#include "AtomicObject.hpp"
+#include "Object.hpp"
 
 namespace Animus {
-    void AtomicObject::lock(void) {
+    void Object::lock(void) {
         this->mutex.lock();
     }
 
-    void AtomicObject::unlock(void) {
+    void Object::unlock(void) {
         this->mutex.unlock();
     }
 
-    bool AtomicObject::trylock(void) {
+    bool Object::trylock(void) {
         return this->mutex.try_lock();
     }
 
-    Lock::Lock(AtomicObject& atomic) {
+    Lock::Lock(Object& atomic) {
         atomic.lock();
         this->atomic = &atomic;
     }
 
-    Lock::Lock(AtomicObject *atomic) {
+    Lock::Lock(Object *atomic) {
         atomic->lock();
         this->atomic = atomic;
     }

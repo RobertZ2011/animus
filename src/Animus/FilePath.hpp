@@ -1,7 +1,7 @@
 #ifndef ANIMUS_FILE_PATH
 #define ANIMUS_FILE_PATH
 
-#include "types.hpp"
+#include "types/types.hpp"
 
 #include <exception>
 

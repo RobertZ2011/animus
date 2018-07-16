@@ -3,14 +3,14 @@
 
 #include <exception>
 
-#include "types.hpp"
-#include "macros.hpp"
+#include "types/types.hpp"
+#include "macros/debug.hpp"
 #include "String.hpp"
 
 namespace Animus {
     class FilePath;
 
-    REQUIRES_STD
+    ANIMUS_REQUIRES_STD
     typedef std::exception Exception;
 
     template<>

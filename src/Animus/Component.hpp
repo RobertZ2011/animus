@@ -1,7 +1,7 @@
 #ifndef ANIMUS_COMPONENT
 #define ANIMUS_COMPONENT
 
-#include "types.hpp"
+#include "types/types.hpp"
 
 namespace Animus {
     class Component {
