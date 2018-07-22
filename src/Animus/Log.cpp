@@ -1,4 +1,5 @@
 #include "Log.hpp"
+#include "Lock.hpp"
 
 #include <chrono>
 #include <sstream>
@@ -15,6 +16,7 @@ namespace Animus {
     }
 
     String Log::logRaw(Log::Level level, const String& fmt, const UnsafeVector<String>& args) {
+        Lock lock(this->lock);
         std::stringstream stream;
         int argCount = 0;
         auto now = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now());

@@ -5,7 +5,7 @@
 #include "../../Log.hpp"
 
 namespace Animus::Vulkan {
-    Instance::Instance(void) {
+    Instance_::Instance_(void) {
         vk::ApplicationInfo appInfo(nullptr, 1, "Animus", convertVersion(::Animus::getVersion()), VK_API_VERSION_1_0);
         vk::InstanceCreateInfo createInfo;
         UnsafeVector<const char*> layers;
@@ -27,13 +27,13 @@ namespace Animus::Vulkan {
         this->dispatch = vk::DispatchLoaderDynamic(this->instance);
     }
 
-    Instance::~Instance(void) {
+    Instance_::~Instance_(void) {
         if(this->instance) {
             this->instance.destroy();
         }
     }
 
-    bool Instance::hasExtension(const String& name) {
+    bool Instance_::hasExtension(const String& name) {
         UnsafeVector<vk::ExtensionProperties> extensions = vk::enumerateInstanceExtensionProperties();
 
         for(auto& extension: extensions) {
@@ -45,15 +45,15 @@ namespace Animus::Vulkan {
         return false;
     }
 
-    vk::Instance Instance::getInstance(void) {
+    vk::Instance Instance_::getInstance(void) {
         return this->instance;
     }
 
-    vk::DispatchLoaderDynamic& Instance::getDispatch(void) {
+    vk::DispatchLoaderDynamic& Instance_::getDispatch(void) {
         return this->dispatch;
     }
 
-    bool Instance::supportsMultiGPU(void) {
+    bool Instance_::supportsMultiGPU(void) {
         //Version version = convertVkVersion(vk::enumerateInstanceVersion());
 
         ANIMUS_TODO("Remove this later");
@@ -66,24 +66,30 @@ namespace Animus::Vulkan {
         }*/
     }
 
-    UnsafeVector<PhysicalDevice> Instance::enumerateDevices(void) {
+    UnsafeVector<Pointer<PhysicalDevice_>> Instance_::enumerateDevices(void) {
         UnsafeVector<PhysicalDevice> devices;
 
         if(this->supportsMultiGPU()) {
             //every physical device must be in at least one device group
             auto groups = this->instance.enumeratePhysicalDeviceGroups(this->dispatch);
             for(auto& group: groups) {
-                devices.push_back(PhysicalDevice(*this, group));
+                devices.push_back(PhysicalDevice_::create(this->self.lock(), group));
             }
         }
         else {
             auto physicalDevices = this->instance.enumeratePhysicalDevices(this->dispatch);
             for(auto& device: physicalDevices) {
-                devices.push_back(PhysicalDevice(*this, device));
+                devices.push_back(PhysicalDevice_::create(this->self.lock(), device));
             }
         }
 
         return devices;
+    }
+
+    Pointer<Instance_> Instance_::create(void) {
+        Instance instance(new Instance_());
+        instance->self = instance;
+        return instance;
     }
 }
 

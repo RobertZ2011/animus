@@ -1,5 +1,5 @@
 namespace Animus::Vulkan {
-    UnsafeVector<const char*> Instance::getInstanceExtensions(void) {
+    UnsafeVector<const char*> Instance_::getInstanceExtensions(void) {
         UnsafeVector<const char*> extensions = {"VK_KHR_surface"};
 
         #ifdef VK_USE_PLATFORM_XLIB_KHR

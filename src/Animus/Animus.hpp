@@ -2,7 +2,8 @@
 #define ANIMUS_HEADER
 
 #include "Application.hpp"
-#include "Object.hpp"
+#include "Mutex.hpp"
+#include "Lock.hpp"
 #include "types/Queue.hpp"
 #include "types/Vector.hpp"
 #include "SharedObject.hpp"

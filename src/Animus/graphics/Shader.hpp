@@ -1,7 +1,7 @@
 #ifndef ANIMUS_SHADER
 #define ANIMUS_SHADER
 
-#include "types/types.hpp"
+#include "../types/types.hpp"
 
 namespace Animus {
     class VertexStage_ {

@@ -1,4 +1,4 @@
-FILE_NAMES_ANIMUS := String Object FilePath SharedObject ThreadPool version Error Directory File Log Backend System Animus Window Future
+FILE_NAMES_ANIMUS := Mutex Lock String FilePath SharedObject ThreadPool version Error Directory File Log Backend System RenderTarget Animus Window Future
 OBJECT_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/build/%.o)
 CPP_FILES_ANIMUS := $(FILE_NAMES_ANIMUS:%=Animus/%.cpp)
 

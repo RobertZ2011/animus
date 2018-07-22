@@ -2,45 +2,35 @@
 #include "../../Log.hpp"
 
 namespace Animus::Vulkan {
-    Device::Device(Instance& instance, PhysicalDevice& device) : physicalDevice(device), instance(instance) {
-        this->dispatch = instance.getDispatch();
+    Device_::Device_(const Instance& instance, const PhysicalDevice& device) : physicalDevice(device), instance(instance) {
+        this->dispatch = instance->getDispatch();
     }
 
-    Device::~Device(void) {
-        if(this->workQueues.size() != 0 || this->transferQueues.size() != 0) {
-            if(this->workFamily == this->transferFamily) {
-                this->device.destroyCommandPool(this->workPool, nullptr, this->dispatch);
-            }
-            else {
-                this->device.destroyCommandPool(this->workPool, nullptr, this->dispatch);
-                this->device.destroyCommandPool(this->transferPool, nullptr, this->dispatch);
-            }
-        }
-
+    Device_::~Device_(void) {
         this->device.destroy(nullptr, this->dispatch);
     }
 
-    bool Device::hasExtension(const String& name) {
-        return this->physicalDevice.hasExtension(name);
+    bool Device_::hasExtension(const String& name) {
+        return this->physicalDevice->hasExtension(name);
     }
 
-    vk::Device Device::getDevice() {
+    vk::Device Device_::getDevice() {
         return this->device;
     }
 
-    vk::DispatchLoaderDynamic& Device::getDispatch(void) {
+    vk::DispatchLoaderDynamic& Device_::getDispatch(void) {
         return this->dispatch;
     }
 
-    bool Device::isMulti(void) {
-        return this->physicalDevice.isMulti();
+    bool Device_::isMulti(void) {
+        return this->physicalDevice->isMulti();
     }
 
-    PhysicalDevice Device::getPhysicalDevice(void) {
+    PhysicalDevice Device_::getPhysicalDevice(void) {
         return this->physicalDevice;
     }
 
-    void Device::init(vk::QueueFlagBits workType) {
+    void Device_::init(vk::QueueFlagBits workType) {
         struct FamilyInfo {
             vk::QueueFamilyProperties props;
             uint32_t index;
@@ -51,7 +41,7 @@ namespace Animus::Vulkan {
             }
         };
 
-        auto families = this->physicalDevice.getQueueFamilies();
+        auto families = this->physicalDevice->getQueueFamilies();
         vk::DeviceCreateInfo info;
         vk::CommandPoolCreateInfo commandInfo;
         UnsafeVector<const char*> extensions = this->getDeviceExtensions();
@@ -173,14 +163,14 @@ namespace Animus::Vulkan {
         info.queueCreateInfoCount = queueInfo.size();
         info.pQueueCreateInfos = &queueInfo[0];
 
-        if(this->physicalDevice.isMulti()) {
+        if(this->physicalDevice->isMulti()) {
             ANIMUS_TODO("implement this");
         }
         else {
-            this->device = this->physicalDevice.getDevice().createDevice(info, nullptr, instance.getDispatch());
+            this->device = this->physicalDevice->getDevice().createDevice(info, nullptr, instance->getDispatch());
         }
         
-        this->dispatch = vk::DispatchLoaderDynamic(instance.getInstance(), this->device);
+        this->dispatch = vk::DispatchLoaderDynamic(instance->getInstance(), this->device);
 
         //get the queues
         if(this->workFamily == this->transferFamily) {
@@ -203,26 +193,7 @@ namespace Animus::Vulkan {
                 this->transferQueues.push_back(queue);
             }
         }
-
-        //create command pools
-        if(this->workFamily == this->transferFamily) {
-            vk::CommandPoolCreateInfo poolInfo;
-
-            poolInfo.queueFamilyIndex = this->workFamily;
-            this->workPool = this->device.createCommandPool(poolInfo, nullptr, this->dispatch);
-            this->transferPool = this->workPool;
-        }
-        else {
-            vk::CommandPoolCreateInfo workInfo;
-            vk::CommandPoolCreateInfo transferInfo;
-
-            workInfo.queueFamilyIndex = this->workFamily;
-            transferInfo.queueFamilyIndex = this->transferFamily;
-
-            this->workPool = this->device.createCommandPool(workInfo, nullptr, this->dispatch);
-            this->transferPool = this->device.createCommandPool(transferInfo, nullptr, this->dispatch);
-        }
         
-        Log::getSingleton().log("Created graphics device on % with % work and % transfer queues", this->physicalDevice.getName(), this->workQueues.size(), this->transferQueues.size());
+        Log::getSingleton().log("Created graphics device on % with % work and % transfer queues", this->physicalDevice->getName(), this->workQueues.size(), this->transferQueues.size());
     }
  }

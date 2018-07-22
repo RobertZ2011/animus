@@ -3,9 +3,9 @@
 
 #include "types/types.hpp"
 #include "version.hpp"
-#include "Window.hpp"
-#include "Shader.hpp"
+#include "graphics/Shader.hpp"
 #include "Stream.hpp"
+#include "RenderTarget.hpp"
 
 namespace Animus {
     class GraphicsInterface_;
@@ -19,13 +19,12 @@ namespace Animus {
         virtual String getName(void) = 0;
         virtual Version getVersion(void) = 0;
 
-        virtual void setWindow(const Pointer<Window_>& window) = 0;
-        virtual void resize(const Vec2i& size) = 0;
-        virtual void enableVsync(bool enable) = 0;
-        virtual void setBuffering(uint32_t images) = 0;
-        virtual void setDisplayProperties(const Vec2i& size, bool vsync, uint32_t buffering) = 0;
-        virtual void present(void) = 0;
+        virtual void attachTarget(const RenderTarget& target) = 0;
+        virtual void removeTarget(const RenderTarget& target) = 0;
 
+        virtual void render(void) = 0;
+
+        Shader createShader(void);
         VertexStage createVertexStage(const Stream& stream);
         GeometryStage createGeometryStage(const Stream& stream);
         FragmentStage createFragmentStage(const Stream& stream);

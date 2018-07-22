@@ -1,10 +1,15 @@
 #include "Window.hpp"
 #include "Log.hpp"
 #include "Error.hpp"
+#include "types/types.hpp"
 
 #include <SDL2/SDL_syswm.h>
 
 namespace Animus {
+    RenderTargetProxy_::Type WindowProxy_::getRenderTargetType(void) {
+        return RenderTargetProxy_::Type::Window;
+    }
+
     Window_::Window_(const Vec2i& size, const String& title, bool fullscreen) {
         uint32_t flags = fullscreen ? SDL_WINDOW_FULLSCREEN : 0;
 
@@ -106,6 +111,54 @@ namespace Animus {
             default:
                 return String("Unknown");
         }
+    }
+
+    void Window_::enableVsync(bool enabled) {
+        auto proxy = dynamicCast<WindowProxy_>(this->renderTargetProxy);
+
+        if(proxy) {
+            proxy->enableVsync(enabled);
+        }
+        else {
+            throw NoRenderProxy();
+        }
+    }
+    
+    void Window_::resize(const Vec2i& newSize) {
+        auto proxy = dynamicCast<WindowProxy_>(this->renderTargetProxy);
+
+        if(proxy) {
+            proxy->resize(newSize);
+        }
+        else {
+            throw NoRenderProxy();
+        }
+    }
+
+    void Window_::setBuffering(uint32_t count) {
+        auto proxy = dynamicCast<WindowProxy_>(this->renderTargetProxy);
+
+        if(proxy) {
+            proxy->setBuffering(count);
+        }
+        else {
+            throw NoRenderProxy();
+        }
+    }
+
+    void Window_::setDisplayParams(const Vec2i& size, bool vsync, uint32_t buffers) {
+        auto proxy = dynamicCast<WindowProxy_>(this->renderTargetProxy);
+
+        if(proxy) {
+            proxy->setDisplayParams(size, vsync, buffers);
+        }
+        else {
+            throw NoRenderProxy();
+        }
+    }
+
+    RenderTargetProxy_::Type Window_::getRenderTargetType(void) {
+        return RenderTargetProxy_::Type::Window;
     }
 }
 

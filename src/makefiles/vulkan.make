@@ -1,4 +1,4 @@
-FILE_NAMES_VULKAN := functions Error Instance PhysicalDevice Device Swapchain GraphicsDevice Backend vulkan
+FILE_NAMES_VULKAN := functions Error Instance PhysicalDevice Device Swapchain CommandPool CommandBuffer GraphicsDevice Backend vulkan
 OBJECT_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/build/vulkan/%.o)
 CPP_FILES_VULKAN := $(FILE_NAMES_VULKAN:%=Animus/backends/Vulkan/%.cpp)
 

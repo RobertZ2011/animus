@@ -11,13 +11,14 @@
 #include <vulkan/vulkan.hpp>
 
 #include "Instance.hpp"
+#include "PhysicalDevice.hpp"
 
 namespace Animus::Vulkan {
     class Backend : public ::Animus::Backend {
         UnsafeVector<GraphicsInterfaceInfo> graphicsInfo = { GraphicsInterfaceInfo("Vulkan", Version(1, 0, 0)) };
         UnsafeVector<ComputeInterfaceInfo> computeInfo = { ComputeInterfaceInfo("Vulkan", Version(1, 0, 0)) };
 
-        Instance *instance;
+        Instance instance;
         GraphicsInterface graphics;
         ComputeInterface compute;
     public:

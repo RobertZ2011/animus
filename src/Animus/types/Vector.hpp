@@ -1,8 +1,9 @@
 #ifndef ANIMUS_VECTOR
 #define ANIMUS_VECTOR
 
-#include "../Object.hpp"
 #include "../macros/debug.hpp"
+#include "../Lock.hpp"
+#include "types.hpp"
 
 #include <vector>
 #include <initializer_list>
@@ -14,9 +15,10 @@ namespace Animus {
     using UnsafeVector = std::vector<T>;
 
     template<typename T>
-    class Vector : public Object {
+    class Vector{
     private:
         UnsafeVector<T> vector;
+        Mutex lock;
 
     public:
         Vector(void) {
@@ -24,8 +26,8 @@ namespace Animus {
         }
 
         Vector(const Vector<T>& vec) {
-            Lock lock1(vec);
-            Lock lock2(this);
+            Lock lock1(vec.lock);
+            Lock lock2(this->lock);
 
             for(size_t i = 0; i < vec.size(); i++) {
                 this->push_back(vec[i]);
@@ -33,13 +35,13 @@ namespace Animus {
         }
 
         Vector(Vector<T>&& vec) {
-            Lock lock(this);
+            Lock lock(this->lock);
             this->vector = std::move(vec.vector);
         }
 
         ANIMUS_REQUIRES_STD
         Vector(const std::initializer_list<T>& list) {
-            Lock lock(this);
+            Lock lock(this->lock);
             for(auto v: list) {
                 this->vector.push_back(v);
             }
@@ -50,36 +52,36 @@ namespace Animus {
         }
 
         inline Vector<T>& operator=(const std::initializer_list<T>& list) {
-            Lock lock(this);
+            Lock lock(this->lock);
             for(auto v: list) {
                 this->vector.push_back(v);
             }
         }
 
         inline void push_back(const T& value) {
-            Lock lock(this);
+            Lock lock(this->lock);
             this->vector.push_back(value);
         }
 
         ANIMUS_REQUIRES_STD
         inline void push_back(T&& value) {
-            Lock lock(this);
+            Lock lock(this->lock);
             this->vector.push_back(std::forward<T>(value));
         }
 
         inline T& operator[](size_t index) {
-            Lock lock(this);
+            Lock lock(this->lock);
             return this->vector[index];
         }
 
         inline size_t size(void) {
-            Lock lock(this);
+            Lock lock(this->lock);
             return this->vector.size();
         }
 
         ANIMUS_REQUIRES_STD
         inline void filterInPlace(const Function<bool(const T&)>& func) {
-            Lock lock(this);
+            Lock lock(this->lock);
             this->vector.erase(std::remove_if(this->vector.begin(),
                 this->vector.end(),
                 func
@@ -87,12 +89,13 @@ namespace Animus {
         }
 
         UnsafeVector<T> toUnsafe(void) const {
+            Lock lock(this->lock);
             return this->vector;
         }
 
         //allows a function to mutate the underlying vector with only one lock call
         inline void atomically(const Function<void(UnsafeVector<T>&)>& func) {
-            Lock lock(this);
+            Lock lock(this->lock);
             func(this->vector);
         }
     };

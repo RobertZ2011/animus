@@ -7,24 +7,29 @@
 #include <vulkan/vulkan.hpp>
 
 namespace Animus::Vulkan {
-    class PhysicalDevice;
-    class Instance {
+    class PhysicalDevice_;
+    class Instance_ {
         vk::Instance instance;
         vk::DispatchLoaderDynamic dispatch;
+        WeakPtr<Instance_> self;
 
     public:
-        Instance(void);
-        ~Instance(void);
+        ~Instance_(void);
 
         vk::Instance getInstance(void);
         vk::DispatchLoaderDynamic& getDispatch(void);
 
         bool hasExtension(const String& name);
 
-        UnsafeVector<PhysicalDevice> enumerateDevices(void);
+        UnsafeVector<Pointer<PhysicalDevice_>> enumerateDevices(void);
         bool supportsMultiGPU(void);
+
+        static Pointer<Instance_> create(void);
     private:
+        Instance_(void);
         UnsafeVector<const char*> getInstanceExtensions(void);
     };
+
+    typedef Pointer<Instance_> Instance;
 }
 #endif

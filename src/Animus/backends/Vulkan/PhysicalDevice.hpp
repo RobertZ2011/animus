@@ -8,10 +8,11 @@
 
 namespace Animus::Vulkan {
     //Abstraction around groups and device groups
-    class PhysicalDevice {
+    class PhysicalDevice_ {
         Optional<vk::PhysicalDevice> device;
         Optional<vk::PhysicalDeviceGroupProperties> group;
         vk::DispatchLoaderDynamic& dispatch;
+        WeakPtr<PhysicalDevice_> self;
 
         //score for each device type
         const uint32_t TYPE_SCORE[5] = {4, 8, 16, 16, 2};
@@ -23,12 +24,10 @@ namespace Animus::Vulkan {
         const uint32_t QUEUE_OTHER = 4;
 
     public:
-        PhysicalDevice(Instance& instance, vk::PhysicalDevice& device);
-        PhysicalDevice(Instance& instance, vk::PhysicalDeviceGroupProperties& group);
-        PhysicalDevice(const PhysicalDevice& other);
-        ~PhysicalDevice(void) = default;
+        PhysicalDevice_(const PhysicalDevice_& other);
+        ~PhysicalDevice_(void) = default;
 
-        PhysicalDevice& operator=(const PhysicalDevice& other);
+        PhysicalDevice_& operator=(const PhysicalDevice_& other);
 
         bool hasExtension(const String& name);
         uint32_t calculateScore(void);
@@ -40,8 +39,15 @@ namespace Animus::Vulkan {
         UnsafeVector<vk::QueueFamilyProperties> getQueueFamilies(void);
         String getName(void);
 
+        static Pointer<PhysicalDevice_> create(const Instance& instance, vk::PhysicalDevice& device);
+        static Pointer<PhysicalDevice_> create(const Instance& instance, vk::PhysicalDeviceGroupProperties& group);
+
     private:
         uint32_t calculateIndividualScore(vk::PhysicalDevice& device);
+        PhysicalDevice_(const Instance& instance, vk::PhysicalDevice& device);
+        PhysicalDevice_(const Instance& instance, vk::PhysicalDeviceGroupProperties& group);
     };
+
+    typedef Pointer<PhysicalDevice_> PhysicalDevice;
 }
 #endif

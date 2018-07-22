@@ -5,7 +5,7 @@
 #include "../../Log.hpp"
 
 namespace Animus::Vulkan {
-    Swapchain::Swapchain(Instance& instance, GraphicsDevice& device, const Window& window, bool vsync, uint32_t buffers) : 
+    Swapchain_::Swapchain_(const Pointer<Instance_>& instance, const Pointer<GraphicsDevice_>& device, const Window& window, bool vsync, uint32_t buffers) : 
         instance(instance),
         device(device) {
         this->size = window->getSize();
@@ -16,20 +16,20 @@ namespace Animus::Vulkan {
         this->recreate(window);
     }
 
-    Swapchain::~Swapchain() {
+    Swapchain_::~Swapchain_() {
         if(this->swapchain) {
-            this->device.getDevice().destroySwapchainKHR(this->swapchain, nullptr, this->device.getDispatch());
+            this->device->getDevice().destroySwapchainKHR(this->swapchain, nullptr, this->device->getDispatch());
         }
 
         if(this->surface) {
-            this->instance.getInstance().destroySurfaceKHR(this->surface, nullptr, this->instance.getDispatch());
+            this->instance->getInstance().destroySurfaceKHR(this->surface, nullptr, this->instance->getDispatch());
         }
     }
 
-    void Swapchain::recreate(const Window& window) {
+    void Swapchain_::recreate(const Window& window) {
         this->createSurface(window);
 
-        if(!this->device.supportsSurface(this->surface)) {
+        if(!this->device->supportsSurface(this->surface)) {
             ANIMUS_TODO("Throw exception");
         }
 
@@ -48,11 +48,16 @@ namespace Animus::Vulkan {
         }
 
         this->size = window->getSize();
-        this->set(this->size, this->vsync, this->buffers);
+        this->setDisplayParams(this->size, this->vsync, this->buffers);
     }
 
-    void Swapchain::set(const Vec2i& size, bool vsync, uint32_t buffers) {
+    void Swapchain_::setDisplayParams(const Vec2i& size, bool vsync, uint32_t buffers) {
         vk::SwapchainCreateInfoKHR info;
+        Log::getSingleton().logStr(this->device->getPhysicalDevice()->getName());
+        auto presentModes = this->device->getPhysicalDevice()->getDevice().getSurfacePresentModesKHR(this->surface, this->device->getDispatch());
+        auto formats = this->device->getPhysicalDevice()->getDevice().getSurfaceFormatsKHR(this->surface, this->device->getDispatch());
+        //vk::Format selectedFormat;
+        //vk::PresentModeKHR presentMode;
 
         info.minImageCount = buffers;
         info.surface = this->surface;
@@ -60,36 +65,40 @@ namespace Animus::Vulkan {
         info.imageExtent = vk::Extent2D(size.x, size.y);
         info.imageArrayLayers = 1;
 
-        //allow the swapchain to be transferred and sampled
+        //allow the Swapchain to be transferred and sampled
         info.imageUsage = vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eTransferSrc;
         info.imageSharingMode = vk::SharingMode::eExclusive;
         info.presentMode = (vsync) ? vk::PresentModeKHR::eMailbox : vk::PresentModeKHR::eImmediate;
         info.clipped = false;
         info.oldSwapchain = this->swapchain;
 
-        this->swapchain = this->device.getDevice().createSwapchainKHR(info, nullptr, this->device.getDispatch());
-        Log::getSingleton().logStr("Created swapchain");
+        this->swapchain = this->device->getDevice().createSwapchainKHR(info, nullptr, this->device->getDispatch());
+        Log::getSingleton().logStr("Created Swapchain");
     }
 
-    void Swapchain::resize(const Vec2i& size) {
+    Pointer<Swapchain_> Swapchain_::create(const Pointer<Instance_>& instance, const Pointer<GraphicsDevice_>& device, const Window& window, bool vsync, uint32_t buffers) {
+        return Pointer<Swapchain_>(new Swapchain_(instance, device, window, vsync, buffers));
+    }
+
+    void Swapchain_::resize(const Vec2i& size) {
         this->size = size;
-        this->set(this->size, this->vsync, this->buffers);
+        this->setDisplayParams(this->size, this->vsync, this->buffers);
     }
 
-    void Swapchain::enableVsync(bool enable) {
+    void Swapchain_::enableVsync(bool enable) {
         this->vsync = enable;
-        this->set(this->size, this->vsync, this->buffers);
+        this->setDisplayParams(this->size, this->vsync, this->buffers);
     }
 
-    void Swapchain::setBuffering(uint32_t buffers) {
+    void Swapchain_::setBuffering(uint32_t buffers) {
         this->buffers = buffers;
-        this->set(this->size, this->vsync, this->buffers);
+        this->setDisplayParams(this->size, this->vsync, this->buffers);
     }
 
-    vk::SurfaceCapabilitiesKHR Swapchain::getCapabilities(void) {
-        if(!this->device.isMulti()) {
+    vk::SurfaceCapabilitiesKHR Swapchain_::getCapabilities(void) {
+        if(!this->device->isMulti()) {
             //For some reason, this will crash with the device dispatch because it doesn't load the function, using instance for now
-            return this->device.getPhysicalDevice().getDevice().getSurfaceCapabilitiesKHR(this->surface, this->instance.getDispatch());
+            return this->device->getPhysicalDevice()->getDevice().getSurfaceCapabilitiesKHR(this->surface, this->instance->getDispatch());
         }
         else {
             ANIMUS_TODO("implement this");

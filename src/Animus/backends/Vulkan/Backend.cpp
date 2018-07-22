@@ -25,13 +25,12 @@ namespace Animus::Vulkan {
         vkEnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties) vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceExtensionProperties");
         vkEnumerateInstanceVersion = (PFN_vkEnumerateInstanceVersion) vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceVersion");
 
-        this->instance = new Instance();
+        this->instance = Instance_::create();
 
         vkGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr) vkGetInstanceProcAddr(this->instance->getInstance(), "vkGetDeviceProcAddr");
     }
 
     void Backend::deinit(void) {
-        delete this->instance;
     }
 
     const UnsafeVector<GraphicsInterfaceInfo>& Backend::getGraphicsInterfaces(void) {
@@ -44,8 +43,8 @@ namespace Animus::Vulkan {
 
     GraphicsInterface Backend::createGraphicsInterface(const Pointer<Window_>& window, const String& name, Optional<Version> version) {
         PhysicalDevice device = this->selectDevice();
-        GraphicsDevice *graphics = new GraphicsDevice(*this->instance, device, window, true, 2);
-        this->graphics = GraphicsInterface((GraphicsInterface_*) graphics);
+        GraphicsDevice graphics = GraphicsDevice_::create(this->instance, device);
+        this->graphics = staticCast<GraphicsInterface_>(graphics);
 
         return this->graphics;
     }
@@ -57,13 +56,13 @@ namespace Animus::Vulkan {
     PhysicalDevice Backend::selectDevice(void) {
         auto devices = this->instance->enumerateDevices();
 
-        std::sort(devices.begin(), devices.end(), [](PhysicalDevice& a, PhysicalDevice& b) {
-            return a.calculateScore() > b.calculateScore();
+        std::sort(devices.begin(), devices.end(), [](const PhysicalDevice& a, const PhysicalDevice& b) {
+            return a->calculateScore() > b->calculateScore();
         });
 
         Log::getSingleton().log("Found % devices", devices.size());
         for(auto& device: devices) {
-            Log::getSingleton().log("\t% %", device.getName(), device.calculateScore());
+            Log::getSingleton().log("\t% %", device->getName(), device->calculateScore());
         }
 
         return devices[0];

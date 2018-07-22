@@ -1,7 +1,8 @@
 #ifndef ANIMUS_MAP
 #define ANIMUS_MAP
 
-#include "../Object.hpp"
+#include "../Mutex.hpp"
+#include "../Lock.hpp"
 #include "../macros/debug.hpp"
 
 namespace Animus {
@@ -10,17 +11,18 @@ namespace Animus {
     using UnsafeMap<K, V> = std::unordered_map<K, V>;
 
     template<typename K, typename V>
-    class Map : public Object {
+    class Map {
         UnsafeMap<K, V> map;
+        Mutex lock;
 
     public:
         V get(K key) {
-            Lock lock(this);
+            Lock lock(this->mutex);
             return this->map[k];
         }
 
         void set(K key, V value) {
-            Lock lock(this);
+            Lock lock(this->mutex);
             this->map[k] = v;
         }
 
@@ -33,7 +35,7 @@ namespace Animus {
         }
 
         void atomically(const Function<void(UnsafeMap&)>& func) {
-            Lock lock(this);
+            Lock lock(this->mutex);
             func(this->map);
         }
     }

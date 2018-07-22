@@ -3,14 +3,15 @@
 
 #include "Singleton.hpp"
 #include "File.hpp"
-#include "Object.hpp"
+#include "Mutex.hpp"
 #include "types/types.hpp"
 #include "System.hpp"
 #include "types/Vector.hpp"
 
 namespace Animus {
-    class Log : public Singleton<Log>, public Object {
+    class Log : public Singleton<Log>{
         File file;
+        Mutex lock;
 
         Log(void);
 

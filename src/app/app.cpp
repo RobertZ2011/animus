@@ -16,7 +16,9 @@ public:
             GraphicsInterface graphics;
 
             backend->init();
-            backend->createGraphicsInterface(window, "");
+            graphics = backend->createGraphicsInterface(window, "");
+
+            graphics->attachTarget(staticCast<RenderTarget_>(window));
 
             std::cin.get();
             ThreadPool::getSingleton().shutdown();

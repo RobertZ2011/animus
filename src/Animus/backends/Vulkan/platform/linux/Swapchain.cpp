@@ -1,5 +1,5 @@
 namespace Animus::Vulkan {
-    void Swapchain::createSurface(const Window& window) {
+    void Swapchain_::createSurface(const Window& window) {
         if(!window->getNativeWindowType()) {
             throw NoSurface("Cannot create Vulkan surface, unknown native window type");
         }
@@ -15,7 +15,7 @@ namespace Animus::Vulkan {
             info.window = xlibWindow->window;
             info.dpy = xlibWindow->display;
 
-            this->surface = this->instance.getInstance().createXlibSurfaceKHR(info, nullptr, this->instance.getDispatch());
+            this->surface = this->instance->getInstance().createXlibSurfaceKHR(info, nullptr, this->instance->getDispatch());
             Log::getSingleton().logStr("Created Xlib Vulkan surface");
             return;
         }
@@ -29,7 +29,7 @@ namespace Animus::Vulkan {
             info.surface = waylandWindow->surface;
             info.display = waylandWindow->display;
 
-            this->surface = this->instance.getInstance().createWaylandSurfaceKHR(info, nullptr, this->instance.getDispatch());
+            this->surface = this->instance->getInstance().createWaylandSurfaceKHR(info, nullptr, this->instance->getDispatch());
             Log::getSingleton().logStr("Created Wayland Vulkan surface");
             return;
         }

@@ -51,6 +51,24 @@ namespace Animus {
     template<typename T>
     using Optional = std::optional<T>;
 
+    ANIMUS_REQUIRES_STD
+    template<typename O, typename N>
+    inline Pointer<O> dynamicCast(const Pointer<N>& in) {
+        return std::dynamic_pointer_cast<O>(in);
+    }
+
+    ANIMUS_REQUIRES_STD
+    template<typename O, typename N>
+    inline Pointer<O> staticCast(const Pointer<N>& in) {
+        return std::static_pointer_cast<O>(in);
+    }
+
+    ANIMUS_REQUIRES_STD
+    template<typename O, typename N>
+    inline Pointer<O> reinterpretCast(const Pointer<N>& in) {
+        return std::reinterpret_pointer_cast<O>(in);
+    }
+
     typedef glm::ivec2 Vec2i;
     typedef glm::vec2 Vec2f;
     ANIMUS_TODO("Add support for GLM quaternions")

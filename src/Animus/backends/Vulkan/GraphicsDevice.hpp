@@ -6,26 +6,22 @@
 #include "Instance.hpp"
 
 #include "../../GraphicsInterface.hpp"
-#include "../../Object.hpp"
+#include "../../macros/debug.hpp"
 
 namespace Animus::Vulkan {
-    class GraphicsDevice : public Device, public GraphicsInterface_ {
-        Swapchain *swapchain;
+    class GraphicsDevice_ : public Device_, public GraphicsInterface_ {
+        UnsafeVector<RenderTargetProxy> targets;
 
     public:
-        ANIMUS_REQUIRES_STD
-        GraphicsDevice(Instance& instance, PhysicalDevice& device, const Window& window, bool vysnc, uint32_t buffers);
-        virtual ~GraphicsDevice(void);
+        virtual ~GraphicsDevice_(void);
 
         String getName(void) override;
         Version getVersion(void) override;
 
-        void setWindow(const Pointer<Window_>& window) override;
-        void resize(const Vec2i& size) override;
-        void enableVsync(bool enabled) override;
-        void setBuffering(uint32_t buffers) override;
-        void setDisplayProperties(const Vec2i& size, bool vsync, uint32_t buffering) override;
-        void present(void) override;
+        void attachTarget(const RenderTarget& target) override;
+        ANIMUS_REQUIRES_STD
+        void removeTarget(const RenderTarget& target) override;
+        void render(void) override;
 
         bool supportsSurface(vk::SurfaceKHR surface);
 
@@ -33,10 +29,16 @@ namespace Animus::Vulkan {
         GeometryStage createGeometryStage(const Stream& stream);
         FragmentStage createFragmentStage(const Stream& stream);
 
+        static Pointer<GraphicsDevice_> create(const Instance& instance, const PhysicalDevice& device);
+
     protected:
         //This will come in handy when we create shared devices
-        GraphicsDevice(void) = default;
+        GraphicsDevice_(void) = default;
         UnsafeVector<const char*> getDeviceExtensions(void) override;
+        ANIMUS_REQUIRES_STD
+        GraphicsDevice_(const Instance& instance, const PhysicalDevice& device);
     };
+
+    typedef Pointer<GraphicsDevice_> GraphicsDevice;
 }
 #endif
